@@ -29,7 +29,7 @@ Windows:
 
 ## Run ZeroWaste_Server
 
-To run <project_name>, follow these steps:
+To run `ZeroWaste`, follow these steps:
 
 ```
 $ python manage.py runserver
