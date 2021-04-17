@@ -27,7 +27,8 @@ INSTALLED_APPS = [
 
     # developed apps
     'apps.core',
-    'apps.user'
+    'apps.user',
+    'apps.missions'
 ]
 
 MIDDLEWARE = [
