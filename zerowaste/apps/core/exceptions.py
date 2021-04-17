@@ -24,8 +24,13 @@ class CoreException(APIException):
                (self.default_code, self.status_code, self.default_detail)
 
 
-class BadRequest(CoreException):
-    status_code = status.HTTP_400_BAD_REQUEST
+# 서비스적인 Exception은 200을 보내고, error_code로 핸들링
+class ServiceException(CoreException):
+    status_code = status.HTTP_200_OK
+    default_detail = _('A server error occurred.')
+
+
+class BadRequest(ServiceException):
     default_detail = _('Bad request.')
     default_code = errno.BAD_REQUEST
 
@@ -35,14 +40,11 @@ class ValidationError(BadRequest):
     default_code = errno.VALIDATION_ERROR
 
 
-class Unauthorized(CoreException):
-    status_code = status.HTTP_401_UNAUTHORIZED
+class Unauthorized(ServiceException):
     default_detail = _('Unauthorized.')
     default_code = errno.UNAUTHORIZED
 
 
-class InternalServerError(CoreException):
-    """Uncaught error for 500"""
-    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+class InternalServerError(ServiceException):
     default_detail = _('A Internal server error occurred.')
     default_code = errno.INTERNAL_SERVER_ERROR
