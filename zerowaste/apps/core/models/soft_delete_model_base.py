@@ -5,6 +5,8 @@ from apps.core.models.model_base import ModelBase
 from apps.core import exceptions
 
 
+# models delete -> cascade info
+# https://stackoverflow.com/questions/38388423/what-does-on-delete-do-on-django-models
 class SoftDeleteModelBase(ModelBase):
     deleted_at = models.DateTimeField(null=True, blank=True)
 

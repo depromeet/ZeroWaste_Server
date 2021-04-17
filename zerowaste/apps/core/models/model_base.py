@@ -9,6 +9,3 @@ class ModelBase(models.Model):
 
     class Meta:
         abstract = True
-
-    def __str__(self):
-        return f"id: {self.id} created:{self.created_at} updated:{self.updated_at} deleted: {self.deleted_at}"

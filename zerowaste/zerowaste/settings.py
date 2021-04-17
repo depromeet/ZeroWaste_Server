@@ -1,11 +1,16 @@
 import os
 import logging.config
 from django.utils.log import DEFAULT_LOGGING
+from dotenv import load_dotenv
+from os.path import join, dirname
+
+dotenv_path = join(dirname(__file__), '../.env')
+load_dotenv(dotenv_path)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = '^^g8ftms+cscywjrjlm(#s&aw=a&3i-!4-f61fm4ievmo-pm(&'
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -17,18 +22,28 @@ ENVIRONMENT = os.environ.get('ENVIRONMENT', default='LOCAL')
 # Application definition
 
 INSTALLED_APPS = [
+    # Django Apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
+
+    # third party apps
     'rest_framework',
 
     # developed apps
     'apps.core',
-    'apps.user'
+    'apps.user',
+    'apps.mission'
 ]
+
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -70,8 +85,12 @@ WSGI_APPLICATION = 'zerowaste.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'zero_waste_db',
+        'USER': os.environ.get("DATABASE_USER", "depromeet8"),
+        'PASSWORD': os.environ.get("DATABASE_PASSWORD"),
+        'HOST': 'localhost',
+        'PORT': '3306'
     }
 }
 
