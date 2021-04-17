@@ -1,8 +1,10 @@
 from django.contrib import admin
 
-# Register your models here.
+from apps.mission.models.mission import Mission, MissionLiker
+from apps.mission.models.certification import Certification, CertificationLiker
 
-from apps.mission.models.mission import Mission, Mission_liker
 
 admin.site.register(Mission)
-admin.site.register(Mission_liker)
+admin.site.register(MissionLiker)
+admin.site.register(Certification)
+admin.site.register(CertificationLiker)
