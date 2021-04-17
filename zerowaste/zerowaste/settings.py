@@ -1,11 +1,16 @@
 import os
 import logging.config
 from django.utils.log import DEFAULT_LOGGING
+from dotenv import load_dotenv
+from os.path import join, dirname
+
+dotenv_path = join(dirname(__file__), '../.env')
+load_dotenv(dotenv_path)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = '^^g8ftms+cscywjrjlm(#s&aw=a&3i-!4-f61fm4ievmo-pm(&'
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -80,8 +85,12 @@ WSGI_APPLICATION = 'zerowaste.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'zero_waste_db',
+        'USER': os.environ.get("DATABASE_USER", "depromeet8"),
+        'PASSWORD': os.environ.get("DATABASE_PASSWORD"),
+        'HOST': 'localhost',
+        'PORT': '3306'
     }
 }
 
