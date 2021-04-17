@@ -48,3 +48,9 @@ class Unauthorized(ServiceException):
 class InternalServerError(ServiceException):
     default_detail = _('A Internal server error occurred.')
     default_code = errno.INTERNAL_SERVER_ERROR
+
+
+class SoftDeleteError(CoreException):
+    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    default_detail = _('Soft delete error.')
+    default_code = errno.SOFT_DELETE_ERROR
