@@ -12,7 +12,7 @@ class Auth(SoftDeleteModelBase):
         )
 
     email = models.CharField(max_length=100, unique=True)
-    user_id = models.ForeignKey("User", related_name="user", on_delete=models.CASCADE, db_column="user_id")
+    user_id = models.ForeignKey("User", related_name="auth_user", on_delete=models.CASCADE, db_column="user_id")
     social_token = models.CharField(max_length=150)
     login_type = models.SmallIntegerField('state', choices=LoginType.types)
     token = models.CharField(max_length=200)
