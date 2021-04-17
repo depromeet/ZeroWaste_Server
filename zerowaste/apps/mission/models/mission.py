@@ -37,3 +37,9 @@ class Mission(SoftDeleteModelBase):
     logo_img_url = models.CharField(max_length=200)
     icon_img_url = models.CharField(max_length=200)
     content = models.CharField(max_length=1000)
+
+
+class Mission_liker(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    mission_id = models.ForeignKey("Mission", related_name="mission", db_column="mission_id")
+    user_id = models.ForeignKey("User", related_name="user", on_delete=models.CASCADE, db_column="user_id")
