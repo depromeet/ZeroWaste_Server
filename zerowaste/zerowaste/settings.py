@@ -17,19 +17,28 @@ ENVIRONMENT = os.environ.get('ENVIRONMENT', default='LOCAL')
 # Application definition
 
 INSTALLED_APPS = [
+    # Django Apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
+
+    # third party apps
     'rest_framework',
 
     # developed apps
     'apps.core',
     'apps.user',
-    'apps.missions'
+    'apps.mission'
 ]
+
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

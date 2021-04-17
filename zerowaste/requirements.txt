@@ -1,0 +1,13 @@
+asgiref==3.3.1
+bson==0.5.10
+Django==3.0.10
+django-extensions==3.1.2
+djangorestframework==3.12.4
+graphviz==0.16
+pygraphviz==1.7
+pyparsing==2.4.7
+python-dateutil==2.8.1
+pytz==2021.1
+six==1.15.0
+sqlparse==0.4.1
+ujson==4.0.2
