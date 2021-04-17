@@ -12,5 +12,5 @@ class User(SoftDeleteModelBase):
     name = models.CharField(max_length=8)
     nickname = models.CharField(max_length=10)
     level = models.SmallIntegerField('state', choices=Level.levels, default=Level.INIT)
-    is_forbidden = models.SmallIntegerField(default=0)
+    reported_counts = models.SmallIntegerField(default=0)
     is_notify = models.BooleanField(default=True)
