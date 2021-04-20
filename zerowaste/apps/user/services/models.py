@@ -27,6 +27,7 @@ def get_user_by_id(user_id):
 
 
 def record_user_token(auth):
+    # TODO: auth의 user_id가 user object를 들고있는데, 확인하기
     token = get_user_token(get_user_by_id(auth.user_id.id))
     auth.token = token
     auth.save()
