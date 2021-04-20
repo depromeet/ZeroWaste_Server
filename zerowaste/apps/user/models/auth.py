@@ -11,7 +11,8 @@ class Auth(SoftDeleteModelBase):
             (Apple, 'apple'),
         )
 
-    email = models.CharField(max_length=100, unique=True)
+    identifier = models.CharField(max_length=50, unique=True)
+    email = models.CharField(max_length=100, null=True, blank=True)
     user_id = models.ForeignKey("User", related_name="auth_user", on_delete=models.CASCADE, db_column="user_id")
     social_token = models.CharField(max_length=150)
     login_type = models.SmallIntegerField('state', choices=LoginType.types)
