@@ -3,9 +3,9 @@ from rest_framework.response import Response
 
 from apps.user.serializers import social_login, models
 from apps.core import exceptions
-from apps.user.services import kakao_account
+from apps.user.services import kakao_account, jwt_token
 from apps.user.models.auth import Auth
-from apps.user.services.models import create_anonymous_user, get_auth_by_identifier_with_login_type, create_auth
+from apps.user.services.models import create_anonymous_user, get_auth_by_identifier_with_login_type, create_auth, record_user_token
 
 
 class KakaoLoginAPIView(views.APIView):
@@ -28,6 +28,7 @@ class KakaoLoginAPIView(views.APIView):
                 anonymous_user = create_anonymous_user()
                 auth = create_auth(identifier=kakao_user_id, email=None, user=anonymous_user, social_token=kakao_access_token, login_type=Auth.LoginType.Kakao)
 
+            auth = record_user_token(auth)
             auth_serializer = models.AuthSerializer(auth)
             return Response(auth_serializer.data, status=status.HTTP_200_OK)
         raise exceptions.ValidationError()
