@@ -4,9 +4,11 @@ Django==3.0.10
 django-dotenv==1.4.2
 django-extensions==3.1.2
 djangorestframework==3.12.4
+djangorestframework-jwt==1.11.0
 graphviz==0.16
 mysqlclient==2.0.3
 pygraphviz==1.7
+PyJWT==1.7.1
 pyparsing==2.4.7
 python-dateutil==2.8.1
 python-dotenv==0.17.0

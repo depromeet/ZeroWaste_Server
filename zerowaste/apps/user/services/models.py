@@ -4,7 +4,7 @@ from apps.core.utils.tools import id_generator
 
 
 def create_anonymous_user():
-    user = User(name="", nickname=id_generator())
+    user = User(nickname=id_generator())
     user.save()
     return user
 

@@ -16,5 +16,5 @@ class Auth(SoftDeleteModelBase):
     user_id = models.ForeignKey("User", related_name="auth_user", on_delete=models.CASCADE, db_column="user_id")
     social_token = models.CharField(max_length=150)
     login_type = models.SmallIntegerField('state', choices=LoginType.types)
-    token = models.CharField(max_length=200)
+    token = models.CharField(max_length=300)
 
