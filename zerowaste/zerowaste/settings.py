@@ -14,9 +14,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(os.environ.get("DJANGO_DEBUG_MODE", "True"))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1',
+                 '18.217.57.135', 'ec2-18-217-57-135.us-east-2.compute.amazonaws.com']
 
 ENVIRONMENT = os.environ.get('ENVIRONMENT', default='LOCAL')
 
@@ -125,7 +126,7 @@ DATABASES = {
         'NAME': 'zero_waste_db',
         'USER': os.environ.get("DATABASE_USER", "depromeet8"),
         'PASSWORD': os.environ.get("DATABASE_PASSWORD"),
-        'HOST': 'localhost',
+        'HOST': os.environ.get("DATABASE_HOST", 'localhost'),
         'PORT': '3306'
     }
 }
@@ -195,11 +196,11 @@ logging.config.dictConfig({
     'loggers': {
         '': {  # Root logger which all others
             'handlers': ['console'],  # propagates to, DEBUG by default
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'WARNING'),
+            'level': os.environ.get('DJANGO_LOG_LEVEL', 'WARNING'),
         },
         'django': {  # Django system messages
             'handlers': ['null'],  # See django doc to filter subsystems
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+            'level': os.environ.get('DJANGO_LOG_LEVEL', 'DEBUG'),
             'propagate': False,
         },
     },
