@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from apps.user.serializers import social_login, models
 from apps.core import exceptions
 from apps.core.utils.response import build_response_body
-from apps.user.services import kakao_account, jwt_token
+from apps.user.services import kakao_account
 from apps.user.models.auth import Auth
 from apps.user.services.models import create_anonymous_user, get_auth_by_identifier_with_login_type, create_auth, record_user_token
 
