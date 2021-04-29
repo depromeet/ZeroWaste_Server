@@ -120,6 +120,7 @@ celerybeat.pid
 # Environments
 zerowaste/.env
 .env.local
+.env.develop
 .venv
 env/
 venv/
@@ -384,3 +385,4 @@ sketch
 
 # ERD 이미지
 erd.png
+zero_waste.pem

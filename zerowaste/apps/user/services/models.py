@@ -3,6 +3,7 @@ from apps.user.models.auth import Auth
 from apps.core.utils.tools import id_generator
 from apps.user.services.jwt_token import get_user_token
 
+
 def create_anonymous_user():
     user = User(nickname=id_generator())
     user.save()
