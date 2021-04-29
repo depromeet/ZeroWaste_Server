@@ -35,6 +35,16 @@ class BadRequest(ServiceException):
     default_code = errno.BAD_REQUEST
 
 
+class FailedDependencyError(CoreException):
+    status_code = status.HTTP_424_FAILED_DEPENDENCY
+    default_detail = _('External Server Error Occurred.')
+
+
+class KakaoAccountServerError(FailedDependencyError):
+    default_detail = _('Kakao Server Error')
+    default_code = errno.FAILED_DEPENDENCY
+
+
 class ValidationError(BadRequest):
     default_detail = _('Invalid input.')
     default_code = errno.VALIDATION_ERROR
