@@ -34,7 +34,7 @@ class Mission(SoftDeleteModelBase):
                                    db_column="creater_id")  # CASCADE 되면 안됨
     category = models.SmallIntegerField('category', choices=Category.category, default=Category.RECYCLE)
     # TODO: reported counts -> likes 처럼 관리하기
-    reported_counts = models.SmallIntegerField(default=0)
+    # reported_counts = models.SmallIntegerField(default=0)
     difficulty = models.SmallIntegerField('difficulty', choices=Difficulty.difficulty, default=Difficulty.EASY)
     logo_img_url = models.CharField(max_length=200)
     icon_img_url = models.CharField(max_length=200)

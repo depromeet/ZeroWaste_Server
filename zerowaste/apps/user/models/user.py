@@ -35,8 +35,8 @@ class User(AbstractUser, SoftDeleteModelBase):
 
     nickname = models.CharField(max_length=10, unique=True)
     level = models.SmallIntegerField('level', default=1)
-    reported_counts = models.SmallIntegerField(default=0)
     is_notify = models.BooleanField(default=True)
+    # reported_counts = models.SmallIntegerField(default=0)
 
     USERNAME_FIELD = 'nickname'
     REQUIRED_FIELDS = []
