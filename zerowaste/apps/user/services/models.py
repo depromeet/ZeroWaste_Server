@@ -33,3 +33,11 @@ def record_user_token(auth):
     auth.token = token
     auth.save()
     return auth
+
+
+def get_user_by_nickname(nickname):
+    try:
+        user = User.objects.get(nickname=nickname)
+    except User.DoesNotExist:
+        user = None
+    return user

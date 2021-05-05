@@ -50,6 +50,11 @@ class ValidationError(BadRequest):
     default_code = errno.VALIDATION_ERROR
 
 
+class NicknameDoubleCheckedError(ValidationError):
+    default_detail = _('This nickname is unavailable')
+    default_code = errno.NICKNAME_UNAVAILABLE
+
+
 class Unauthorized(ServiceException):
     default_detail = _('Unauthorized.')
     default_code = errno.UNAUTHORIZED
