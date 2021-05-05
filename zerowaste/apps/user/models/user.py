@@ -1,8 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
-from apps.core.models.soft_delete_model_base import SoftDeleteModelBase
-
+from apps.core.models.soft_delete_model_base import ModelBase
+from apps.core.utils.tools import id_generator
+from apps.user.models.auth import Auth
 
 class UserManager(BaseUserManager):
     def create_user(self, nickname, is_active=True, **extra_fields):
@@ -28,7 +29,7 @@ class UserManager(BaseUserManager):
         return user
 
 
-class User(AbstractUser, SoftDeleteModelBase):
+class User(AbstractUser, ModelBase):
     first_name = None
     last_name = None
     username = None
@@ -36,9 +37,20 @@ class User(AbstractUser, SoftDeleteModelBase):
     nickname = models.CharField(max_length=10, unique=True)
     level = models.SmallIntegerField('level', default=1)
     is_notify = models.BooleanField(default=True)
+    description = models.CharField(max_length=100, default="", null=True, blank=True)
     # reported_counts = models.SmallIntegerField(default=0)
 
     USERNAME_FIELD = 'nickname'
     REQUIRED_FIELDS = []
 
     objects = UserManager()
+
+    def delete(self, *args, **kwargs):
+        self.nickname = id_generator()
+        self.level = 0
+        try:
+            auth = Auth.objects.get(user_id=self.id)
+            auth.delete()
+        except:
+            pass
+        self.save()

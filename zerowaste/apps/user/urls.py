@@ -11,6 +11,6 @@ urlpatterns = [
     path('jwt-auth/refresh/', jwt_views.refresh_jwt_token),
     path('jwt-auth/kakao/', social_login.KakaoLoginAPIView.as_view()),
     # path('api-jwt-auth/apple', views.AppleLoginAPIView.as_view()),
-
+    path('users/double_check', users.double_check),
     path('', include(router.urls)),
 ]
