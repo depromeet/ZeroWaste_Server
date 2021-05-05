@@ -18,13 +18,13 @@ class SoftDeleteModelBase(ModelBase):
             raise exceptions.SoftDeleteError(
                 detail=f'table:{self.__class__.__name__} id:{self.id} is already deleted'
             )
-        self.deleted = timezone.now()
+        self.deleted_at = timezone.now()
         self.save()
 
     def undelete(self, *args, **kwargs):
-        if not self.deleted:
+        if not self.deleted_at:
             raise exceptions.SoftDeleteError(
                 detail=f'table:{self.__class__.__name__} id:{self.id} is not deleted'
             )
-        self.deleted = None
+        self.deleted_at = None
         self.save()

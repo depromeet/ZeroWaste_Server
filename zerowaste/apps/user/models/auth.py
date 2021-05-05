@@ -1,8 +1,8 @@
-from apps.core.models.soft_delete_model_base import SoftDeleteModelBase
+from apps.core.models.soft_delete_model_base import ModelBase
 from django.db import models
 
 
-class Auth(SoftDeleteModelBase):
+class Auth(ModelBase):
     class LoginType:
         Kakao = 0
         Apple = 1
