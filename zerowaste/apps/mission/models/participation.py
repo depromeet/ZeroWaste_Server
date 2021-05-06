@@ -15,6 +15,6 @@ class Mission(ModelBase):
 
     mission_id = models.ForeignKey("Mission", related_name="participated_mission", on_delete=models.CASCADE,
                                    db_column="mission_id")
-    user_id = models.ForeignKey("user.User", related_name="participated_user", on_delete=models.CASCADE,
-                                db_column="user_id")
+    owner = models.ForeignKey("user.User", related_name="participated_user", on_delete=models.CASCADE,
+                                db_column="owner")
     status = models.SmallIntegerField('status', choices=Status.status, default=Status.READY)
