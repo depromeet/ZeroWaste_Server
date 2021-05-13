@@ -37,7 +37,7 @@ class User(AbstractUser, ModelBase):
     nickname = models.CharField(max_length=10, unique=True)
     level = models.SmallIntegerField('level', default=1)
     is_notify = models.BooleanField(default=True)
-    description = models.CharField(max_length=100, unique=True)
+    description = models.CharField(max_length=100, default="", null=True, blank=True)
     # reported_counts = models.SmallIntegerField(default=0)
 
     USERNAME_FIELD = 'nickname'
