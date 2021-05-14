@@ -97,7 +97,7 @@ class CertificationViewSet(viewsets.GenericViewSet,
     permission_classes = [custom_permission.IsOwnerOrReadOnly]
     permission_classes_by_action = {'create': [permissions.AllowAny]}
     queryset = Certification.objects
-    serializer_class = Certification
+    serializer_class = CertificationSerializer
 
     def get_permissions(self):
         if self.request.method == 'POST':
