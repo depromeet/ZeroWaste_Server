@@ -2,7 +2,7 @@ from apps.core.models.model_base import ModelBase
 from django.db import models
 
 
-class Mission(ModelBase):
+class Participation(ModelBase):
     class Status:
         READY = 0
         PROGRESS = 1
@@ -18,3 +18,5 @@ class Mission(ModelBase):
     owner = models.ForeignKey("user.User", related_name="participated_user", on_delete=models.CASCADE,
                                 db_column="owner")
     status = models.SmallIntegerField('status', choices=Status.status, default=Status.READY)
+    start_date = models.DateTimeField(auto_now_add=True)
+    end_date = models.DateTimeField()
