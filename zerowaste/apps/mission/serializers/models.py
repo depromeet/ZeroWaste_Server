@@ -21,11 +21,13 @@ class MissionSerializer(serializers.ModelSerializer):
             user = request.user
             self.initial_data['owner'] = user
 
+    #TODO: 해당 사용자가 인증을 작성할 수 있는지 여부 -> can_write_certification : Participation 객체 여부
     def to_representation(self, instance):
         value = super(MissionSerializer, self).to_representation(instance)
         creater = get_user_by_id(value['owner'])
         value['creater'] = UserSerializer(creater).data['data']
         return build_response_body(data=value)
+
 
 class CertificationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -41,6 +43,7 @@ class CertificationSerializer(serializers.ModelSerializer):
             user = request.user
             self.initial_data['owner'] = user
 
+    #TODO: ?? certification에서는 creater 로 키를 바꾸기보다, 그냥 owner 정보로 보여져도 될거같은데요?
     def to_representation(self, instance):
         value = super(CertificationSerializer, self).to_representation(instance)
         creater = get_user_by_id(value['owner'])

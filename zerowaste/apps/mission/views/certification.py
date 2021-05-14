@@ -107,4 +107,5 @@ class CertificationViewSet(viewsets.GenericViewSet,
         return super(CertificationViewSet, self).get_permissions()
 
     def create(self, request, *args, **kwargs):
+        #TODO: participation 객체 생성 여부 체크
         return super(CertificationViewSet, self).create(request, *args, **kwargs)
