@@ -13,6 +13,7 @@ class Mission(SoftDeleteModelBase):
         OUTSIDE = 'outside'
 
     class Difficulty(models.TextChoices):
+        VERY_EASY = 'very_easy'
         EASY = 'easy'
         MEDIUM = 'medium'
         HARD = 'hard'
@@ -30,7 +31,7 @@ class Mission(SoftDeleteModelBase):
         max_length=(10 * 11),
         default=['refuse', 'reduce', 'reuse', 'recycle', 'rot']
     )
-    difficulty = models.CharField('difficulty', max_length=10, choices=Difficulty.choices, default=Difficulty.EASY)
+    difficulty = models.CharField('difficulty', max_length=10, choices=Difficulty.choices, default=Difficulty.VERY_EASY)
     logo_img_url = models.CharField(max_length=200)
     icon_img_url = models.CharField(max_length=200)
     content = models.CharField(max_length=1000)
