@@ -8,7 +8,6 @@ from drf_yasg.utils import swagger_auto_schema
 from apps.mission.serializers.models import ParticipationSerializer
 from apps.mission.models.participation import Participation
 from apps.core import constants
-from apps.core.mixins import PartialUpdateModelMixin
 from apps.core.utils.response import build_response_body
 from apps.core.utils.tools import to_dict
 from apps.mission.services import models
