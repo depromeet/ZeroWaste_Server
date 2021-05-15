@@ -35,8 +35,7 @@ class MissionSerializer(serializers.ModelSerializer):
     def to_internal_value(self, data):
         request = self.context.get("request")
         if request and hasattr(request, "user"):
-            user = request.user
-            self.initial_data['owner'] = user
+            self.initial_data['owner'] = request.user
 
     #TODO: 해당 사용자가 인증을 작성할 수 있는지 여부 -> Participation 상태 리턴
     #participation_state -> none, ready, progress, success, failure
@@ -49,11 +48,15 @@ class MissionSerializer(serializers.ModelSerializer):
 
 
 class ParticipationSerializer(serializers.ModelSerializer):
-    mission_id = MissionSerializer(read_only=True)
 
     class Meta:
         model = Participation
         fields = ('id', 'mission_id', 'owner', 'status', 'start_date', 'end_date')
+
+    def to_internal_value(self, data):
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
+            self.initial_data['owner'] = request.user
 
 
 class CertificationSerializer(serializers.ModelSerializer):
@@ -69,8 +72,7 @@ class CertificationSerializer(serializers.ModelSerializer):
     def to_internal_value(self, data):
         request = self.context.get("request")
         if request and hasattr(request, "user"):
-            user = request.user
-            self.initial_data['owner'] = user
+            self.initial_data['owner'] = request.user
 
     # TODO: ?? certification에서는 creater로 키를 바꾸기보다, 그냥 owner 정보로 보여져도 될거같은데요?
     def to_representation(self, instance):
