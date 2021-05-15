@@ -5,9 +5,12 @@ from django_mysql.models import ListCharField
 
 class Mission(SoftDeleteModelBase):
     class Place(models.TextChoices):
-        SCHOOL = 'school'
-        COMPANY = 'company'
-        HOUSE = 'house'
+        ETC = 'etc'
+        KITCHEN = 'kitchen'
+        BATHROOM = 'bathroom'
+        CAFE = 'cafe'
+        RESTAURANT = 'restaurant'
+        OUTSIDE = 'outside'
 
     class Difficulty(models.TextChoices):
         EASY = 'easy'
@@ -20,7 +23,7 @@ class Mission(SoftDeleteModelBase):
                                    db_column="owner")  # CASCADE 되면 안됨
     place = models.CharField(max_length=10,
                              choices=Place.choices,
-                             default=Place.HOUSE)
+                             default=Place.ETC)
     theme = ListCharField(
         base_field=models.CharField(max_length=10),
         size=10,
