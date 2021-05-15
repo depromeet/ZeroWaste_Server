@@ -6,14 +6,27 @@ from apps.mission.models.participation import Participation
 from apps.core.utils.response import build_response_body
 from apps.user.services.models import get_user_by_id
 from apps.user.serializers.models import UserSerializer
+from apps.core.exceptions import ValidationError
 
 
 class MissionSerializer(serializers.ModelSerializer):
+    _THEME_LIST = ('refuse', 'reduce', 'reuse', 'recycle', 'rot')
+
     class Meta:
         model = Mission
-        fields = ('id', 'name', 'owner', 'category', "difficulty", "logo_img_url", "icon_img_url", "content")
+        fields = ('id', 'name', 'owner', 'place', 'theme', "difficulty", "logo_img_url", "icon_img_url", "content")
 
-    def validate(self, attrs):
+    def validate(self, data):
+        if not self.initial_data['place'] in Mission.Place:
+            raise ValidationError(f'place is not in {Mission.Place.choices}')
+
+        if not self.initial_data['difficulty'] in Mission.Difficulty:
+            raise ValidationError(f'difficulty is not in {Mission.Difficulty.choices}')
+
+        for theme_item in self.initial_data['theme']:
+            if not theme_item in self._THEME_LIST:
+                raise ValidationError(f'{theme_item} is not in {self._THEME_LIST}')
+
         return self.initial_data
 
     def to_internal_value(self, data):
@@ -27,6 +40,7 @@ class MissionSerializer(serializers.ModelSerializer):
         value = super(MissionSerializer, self).to_representation(instance)
         creater = get_user_by_id(value['owner'])
         value['creater'] = UserSerializer(creater).data['data']
+        value['theme'] = instance.theme
         return build_response_body(data=value)
 
 
