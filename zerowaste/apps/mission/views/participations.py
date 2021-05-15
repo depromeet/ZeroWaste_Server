@@ -36,7 +36,7 @@ from apps.mission.services import models
 @method_decorator(name='partial_update',
     decorator=swagger_auto_schema(
         tags=['missions'],
-        operation_description="Mission 재시도 시 객체 업데이",
+        operation_description="Mission 재시도 시 객체 업데이트",
         manual_parameters=[
             openapi.Parameter(
                 'Authorization', openapi.IN_HEADER,
@@ -52,18 +52,15 @@ from apps.mission.services import models
         }
     )
 )
-class ParticipationViewSet(viewsets.GenericViewSet,
-                           mixins.CreateModelMixin,
-                           PartialUpdateModelMixin):
+class ParticipationViewSet(viewsets.GenericViewSet):
     authentication_classes = [JSONWebTokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
     queryset = Participation.objects
-    serializer_class = ParticipationSerializer
 
     def create(self, request, mission_id):
         participation = models.create_participation(models.get_mission_by_id(mission_id), request.user)
         return Response(build_response_body(data=to_dict(participation)), status=status.HTTP_200_OK)
 
-    # def partial_update(self, request, *args, **kwargs):
-    #     #TODO: 상태값만 업데이트하도록 설정
-    #     return super(ParticipationViewSet, self).partial_update(request, *args, **kwargs)
+    def partial_update(self, request, mission_id, pk):
+        participation = models.update_participation_status(pk, models.get_mission_by_id(mission_id), Participation.Status.READY)
+        return Response(build_response_body(data=to_dict(participation)), status=status.HTTP_200_OK)

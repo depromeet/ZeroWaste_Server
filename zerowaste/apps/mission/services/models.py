@@ -26,13 +26,33 @@ def get_participation_by_mission_and_owner(mission, owner):
         return None
 
 
+def get_participation_period(difficulty):
+    now_date = datetime.now()
+    end_date = now_date + timedelta(days=_UNIT_DAY_BY_DIFFICULTY[difficulty])
+    return now_date, end_date
+
+
 def create_participation(mission, owner):
     participation = get_participation_by_mission_and_owner(mission, owner)
     if not participation:
-        now_date = datetime.now()
-        end_date = now_date + timedelta(days=_UNIT_DAY_BY_DIFFICULTY[mission.difficulty])
+        now_date, end_date = get_participation_period(mission.difficulty)
         # TODO: mission_id -> mission으로 변경
         participation = Participation(mission_id=mission, owner=owner, start_date=now_date,
                                       end_date=end_date)
         participation.save()
+    return participation
+
+
+def get_participation_by_id(participation_id):
+    participation = Participation.objects.get(id=participation_id)
+    return participation
+
+
+def update_participation_status(participation_id, mission, status):
+    participation = get_participation_by_id(participation_id)
+    participation.status = status
+    now_date, end_date = get_participation_period(mission.difficulty)
+    participation.start_date = now_date
+    participation.end_date = end_date
+    participation.save()
     return participation
