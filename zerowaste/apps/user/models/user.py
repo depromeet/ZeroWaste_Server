@@ -5,6 +5,7 @@ from apps.core.models.soft_delete_model_base import ModelBase
 from apps.core.utils.tools import id_generator
 from apps.user.models.auth import Auth
 
+
 class UserManager(BaseUserManager):
     def create_user(self, nickname, is_active=True, **extra_fields):
         if not nickname:
