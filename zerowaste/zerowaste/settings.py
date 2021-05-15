@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'drf_yasg',
+    'django_mysql',
 
     # developed apps
     'apps.core',
