@@ -56,3 +56,8 @@ def update_participation_status(participation_id, mission, status):
     participation.end_date = end_date
     participation.save()
     return participation
+
+
+def get_participations_by_owner(owner, status=Participation.Status.SUCCESS):
+    participations = Participation.objects.filter(owner=owner, status=status)
+    return participations
