@@ -17,13 +17,16 @@ class MissionSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'owner', 'place', 'theme', "difficulty", "logo_img_url", "icon_img_url", "content")
 
     def validate(self, data):
-        if not self.initial_data['place'] in Mission.Place:
+        place = self.initial_data.get('place',None)
+        if place and not place in Mission.Place:
             raise ValidationError(f'{self.initial_data["place"]} is not in {Mission.Place.choices}')
 
-        if not self.initial_data['difficulty'] in Mission.Difficulty:
+        difficulty = self.initial_data.get('difficulty', None)
+        if difficulty and not difficulty in Mission.Difficulty:
             raise ValidationError(f'{self.initial_data["difficulty"]} is not in {Mission.Difficulty.choices}')
 
-        for theme_item in self.initial_data['theme']:
+        theme = self.initial_data.get('theme', [])
+        for theme_item in theme:
             if not theme_item in self._THEME_LIST:
                 raise ValidationError(f'{theme_item} is not in {self._THEME_LIST}')
 
@@ -35,7 +38,8 @@ class MissionSerializer(serializers.ModelSerializer):
             user = request.user
             self.initial_data['owner'] = user
 
-    #TODO: 해당 사용자가 인증을 작성할 수 있는지 여부 -> can_write_certification : Participation 객체 여부
+    #TODO: 해당 사용자가 인증을 작성할 수 있는지 여부 -> Participation 상태 리턴
+    #participation_state -> none, ready, progress, success, failure
     def to_representation(self, instance):
         value = super(MissionSerializer, self).to_representation(instance)
         creater = get_user_by_id(value['owner'])
