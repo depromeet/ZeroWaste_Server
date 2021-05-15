@@ -51,7 +51,7 @@ class ParticipationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Participation
-        fields = ('id', 'mission_id', 'owner', 'status', 'start_date', 'end_date')
+        fields = ('id', 'status', 'start_date', 'end_date')
 
     def to_internal_value(self, data):
         request = self.context.get("request")

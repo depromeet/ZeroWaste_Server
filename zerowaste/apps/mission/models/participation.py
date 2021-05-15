@@ -9,6 +9,7 @@ class Participation(ModelBase):
         SUCCESS = 'success'
         FAILURE = 'failure'
 
+    #TODO: mission_id -> mission으로 변경
     mission_id = models.ForeignKey("Mission", related_name="participated_mission", on_delete=models.CASCADE,
                                    db_column="mission_id")
     owner = models.ForeignKey("user.User", related_name="participated_user", on_delete=models.CASCADE,

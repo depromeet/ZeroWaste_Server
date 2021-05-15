@@ -1,28 +1,69 @@
-from rest_framework import viewsets, mixins, permissions
+from rest_framework import viewsets, mixins, permissions, status
+from rest_framework.response import Response
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from django.utils.decorators import method_decorator
-
-from apps.core import permissions as custom_permission
-from apps.mission.serializers.models import ParticipationSerializer
-from apps.mission.models.participation import Participation
-from apps.mission.models.mission import Mission
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from apps.core import constants
-from datetime import datetime
 
+from apps.mission.serializers.models import ParticipationSerializer
+from apps.mission.models.participation import Participation
+from apps.core import constants
+from apps.core.mixins import PartialUpdateModelMixin
+from apps.core.utils.response import build_response_body
+from apps.core.utils.tools import to_dict
+from apps.mission.services import models
+
+
+@method_decorator(name='create',
+    decorator=swagger_auto_schema(
+        tags=['missions'],
+        operation_description="Mission 수락 시 객체 생성",
+        manual_parameters=[
+            openapi.Parameter(
+                'Authorization', openapi.IN_HEADER,
+                type=openapi.TYPE_STRING,
+                description=constants.USER_JWT_TOKEN
+            ),
+        ],
+        responses={
+            200: ParticipationSerializer,
+            401: 'Authentication Failed(40100)',
+            403: 'Permission denied(403)',
+            404: 'Not found(404)'
+        }
+    )
+)
+@method_decorator(name='partial_update',
+    decorator=swagger_auto_schema(
+        tags=['missions'],
+        operation_description="Mission 재시도 시 객체 업데이",
+        manual_parameters=[
+            openapi.Parameter(
+                'Authorization', openapi.IN_HEADER,
+                type=openapi.TYPE_STRING,
+                description=constants.USER_JWT_TOKEN
+            ),
+        ],
+        responses={
+            200: ParticipationSerializer,
+            401: 'Authentication Failed(40100)',
+            403: 'Permission denied(403)',
+            404: 'Not found(404)'
+        }
+    )
+)
 class ParticipationViewSet(viewsets.GenericViewSet,
                            mixins.CreateModelMixin,
-                           mixins.UpdateModelMixin):
+                           PartialUpdateModelMixin):
     authentication_classes = [JSONWebTokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
     queryset = Participation.objects
     serializer_class = ParticipationSerializer
 
-    def create(self, request, *args, **kwargs):
-        mission_id = request.data['mission_id']
-        mission = Mission.objects.get(id=mission_id)
-        if mission.level == Mission.Difficulty.EASY:
-            unit_day = 3
-            now = datetime.now()
-            Participation.objects.create(start_date = now, end_date = now+unit_day)
+    def create(self, request, mission_id):
+        participation = models.create_participation(models.get_mission_by_id(mission_id), request.user)
+        return Response(build_response_body(data=to_dict(participation)), status=status.HTTP_200_OK)
+
+    # def partial_update(self, request, *args, **kwargs):
+    #     #TODO: 상태값만 업데이트하도록 설정
+    #     return super(ParticipationViewSet, self).partial_update(request, *args, **kwargs)
