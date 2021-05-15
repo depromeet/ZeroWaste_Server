@@ -18,10 +18,10 @@ class MissionSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         if not self.initial_data['place'] in Mission.Place:
-            raise ValidationError(f'place is not in {Mission.Place.choices}')
+            raise ValidationError(f'{self.initial_data["place"]} is not in {Mission.Place.choices}')
 
         if not self.initial_data['difficulty'] in Mission.Difficulty:
-            raise ValidationError(f'difficulty is not in {Mission.Difficulty.choices}')
+            raise ValidationError(f'{self.initial_data["difficulty"]} is not in {Mission.Difficulty.choices}')
 
         for theme_item in self.initial_data['theme']:
             if not theme_item in self._THEME_LIST:
