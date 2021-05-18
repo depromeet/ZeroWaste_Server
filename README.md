@@ -24,8 +24,13 @@ $ pip install -r requirements.txt
 
 Windows:
 ```
-$ cd zerowaste
-$ venv\Script\activate
+$ python -m venv env 
+$ env\Script\activate
+$ pip install -r requirements.txt
+
+
+$ pip install virtualenv==20.4.3
+$ virtualenv venv
 $ pip install -r requirements.txt
 ```
 
