@@ -1,14 +1,15 @@
 from rest_framework import viewsets, mixins, permissions
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from django.utils.decorators import method_decorator
+from django_filters.rest_framework import DjangoFilterBackend
 
 from apps.core import permissions as custom_permission
 from apps.mission.serializers.models import MissionSerializer
 from apps.mission.models.mission import Mission
+from apps.core import constants
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from apps.core import constants
 
 
 @method_decorator(name='create',
@@ -98,6 +99,12 @@ class MissionViewSet(viewsets.GenericViewSet,
     permission_classes_by_action = {'create': [permissions.AllowAny]}
     queryset = Mission.objects
     serializer_class = MissionSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('place', 'difficulty', 'theme')
+
+    def get_queryset(self):
+        #TODO: theme 중복조회 적용하기
+        return super().get_queryset()
 
     def get_permissions(self):
         if self.request.method == 'POST':
