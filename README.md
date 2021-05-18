@@ -24,7 +24,9 @@ $ pip install -r requirements.txt
 
 Windows:
 ```
-<install_command> @kyunghee_lee
+$ cd zerowaste
+$ venv\Script\activate
+$ pip install -r requirements.txt
 ```
 
 ## Run ZeroWaste_Server
