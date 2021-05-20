@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from apps.user.models.auth import Auth
 from apps.user.models.user import User
-from apps.user.models.blacklist import BlackList
+from apps.user.models.blocklist import BlockList
 from apps.core.utils.response import build_response_body
 
 
@@ -20,7 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
         value = super(UserSerializer, self).to_representation(instance)
         return build_response_body(data=value)
 
-class BlackListSerializer(serializers.ModelSerializer):
+class BlockListSerializer(serializers.ModelSerializer):
     class Meta:
-        model = BlackList
+        model = BlockList
         fields = ('id', 'target_user_id', 'reporter_id', 'description')
