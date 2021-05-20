@@ -15,6 +15,11 @@ def get_auth_by_identifier_with_login_type(identifier, login_type):
     return auth
 
 
+def get_auth_by_user_id(user_id):
+    auth = Auth.objects.get(user_id=user_id)
+    return auth
+
+
 def create_auth(identifier, email, user, social_token, login_type):
     auth = Auth(identifier=str(identifier), email=email, user_id=user, social_token=social_token,
                 login_type=login_type)
@@ -27,9 +32,10 @@ def get_user_by_id(user_id):
     return user
 
 
-def record_user_token(auth):
+def record_user_token(auth, token=None):
     # TODO: auth의 user_id가 user object를 들고있는데, 확인하기
-    token = get_user_token(get_user_by_id(auth.user_id.id))
+    if not token:
+        token = get_user_token(get_user_by_id(auth.user_id.id))
     auth.token = token
     auth.save()
     return auth

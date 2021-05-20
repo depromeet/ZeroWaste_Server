@@ -2,7 +2,7 @@ from apps.core.models.soft_delete_model_base import SoftDeleteModelBase
 from django.db import models
 
 
-class BlackList(SoftDeleteModelBase):
+class BlockList(SoftDeleteModelBase):
     class Description:
         SEXUAL = 0
         VIOLENCE = 1
