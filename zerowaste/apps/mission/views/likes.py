@@ -7,6 +7,7 @@ from drf_yasg.utils import swagger_auto_schema
 
 from apps.core.utils.response import build_response_body
 from apps.mission.models.likes import MissionLike
+from apps.mission.serializers.models import MissionLikeSerializer
 from apps.mission.services.models import get_mission_by_id
 from apps.core import constants
 
@@ -14,7 +15,7 @@ from apps.core import constants
 @method_decorator(name='create',
     decorator=swagger_auto_schema(
         tags=['missions'],
-        opertion_description="Mission 좋아요 등록",
+        opertion_description="Mission 좋아요 등록 \n 생성 DATA에 아무것도 안보내셔도 됩니다.",
         manual_parameters=[
             openapi.Parameter(
                 'Authorization', openapi.IN_HEADER,
@@ -33,7 +34,7 @@ from apps.core import constants
 @method_decorator(name='destroy',
     decorator=swagger_auto_schema(
         tags=['missions'],
-        operation_description="Mission 좋아요 등록",
+        operation_description="Mission 좋아요 등록 \n 생성 DATA에 아무것도 안보내셔도 됩니다.",
         manual_parameters=[
             openapi.Parameter(
                 'Authorization', openapi.IN_HEADER,
@@ -52,6 +53,7 @@ from apps.core import constants
 class MissionLikeViewSet(viewsets.GenericViewSet):
     authentication_classes = [JSONWebTokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
+    serializer_class = MissionLikeSerializer
 
     def create(self, request, mission_id):
         MissionLike.objects.get_or_create(

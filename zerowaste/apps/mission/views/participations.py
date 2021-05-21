@@ -5,7 +5,7 @@ from django.utils.decorators import method_decorator
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
-from apps.mission.serializers.models import ParticipationSerializer
+from apps.mission.serializers.models import ParticipationSerializer, ParticipationNoneFieldSerializer
 from apps.mission.models.participation import Participation
 from apps.core import constants
 from apps.core.utils.response import build_response_body
@@ -16,7 +16,7 @@ from apps.mission.services import models
 @method_decorator(name='create',
     decorator=swagger_auto_schema(
         tags=['missions'],
-        operation_description="Mission 수락 시 객체 생성",
+        operation_description="Mission 수락 시 객체 \n 생성 DATA에 아무것도 안보내셔도 됩니다.",
         manual_parameters=[
             openapi.Parameter(
                 'Authorization', openapi.IN_HEADER,
@@ -35,7 +35,7 @@ from apps.mission.services import models
 @method_decorator(name='partial_update',
     decorator=swagger_auto_schema(
         tags=['missions'],
-        operation_description="Mission 재시도 시 객체 업데이트",
+        operation_description="Mission 재시도 시 객체 업데이트 \n 생성 DATA에 아무것도 안보내셔도 됩니다.",
         manual_parameters=[
             openapi.Parameter(
                 'Authorization', openapi.IN_HEADER,
@@ -55,6 +55,7 @@ class ParticipationViewSet(viewsets.GenericViewSet):
     authentication_classes = [JSONWebTokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
     queryset = Participation.objects
+    serializer_class = ParticipationNoneFieldSerializer
 
     def create(self, request, mission_id):
         participation = models.create_participation(models.get_mission_by_id(mission_id), request.user)

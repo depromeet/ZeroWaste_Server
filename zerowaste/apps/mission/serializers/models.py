@@ -3,6 +3,8 @@ from rest_framework import serializers
 from apps.mission.models.mission import Mission
 from apps.mission.models.certification import Certification
 from apps.mission.models.participation import Participation
+from apps.mission.models.likes import MissionLike
+from apps.mission.models.scraps import MissionScrap
 from apps.core.utils.response import build_response_body
 from apps.user.services.models import get_user_by_id
 from apps.user.serializers.models import UserSerializer
@@ -57,6 +59,24 @@ class ParticipationSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         if request and hasattr(request, "user"):
             self.initial_data['owner'] = request.user
+
+
+class ParticipationNoneFieldSerializer(serializers.BaseSerializer):
+    class Meta:
+        model = Participation
+        fields = ''
+
+
+class MissionLikeSerializer(serializers.BaseSerializer):
+    class Meta:
+        model = MissionLike
+        fields = ''
+
+
+class MissionScrapSerializer(serializers.BaseSerializer):
+    class Meta:
+        model = MissionScrap
+        fields = ''
 
 
 class CertificationSerializer(serializers.ModelSerializer):
