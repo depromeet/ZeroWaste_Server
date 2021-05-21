@@ -1,4 +1,4 @@
-from rest_framework import views, viewsets, permissions, status
+from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from django.utils.decorators import method_decorator
@@ -49,7 +49,7 @@ from apps.core import constants
         }
     )
 )
-class MissionLikeAPIView(viewsets.GenericViewSet):
+class MissionLikeViewSet(viewsets.GenericViewSet):
     authentication_classes = [JSONWebTokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
