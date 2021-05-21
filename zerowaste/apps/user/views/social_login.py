@@ -9,6 +9,7 @@ from apps.user.models.auth import Auth
 from apps.user.services.models import create_anonymous_user, get_auth_by_identifier_with_login_type, create_auth, record_user_token
 
 from drf_yasg.utils import swagger_auto_schema
+import logging
 
 
 class KakaoLoginAPIView(views.APIView):
@@ -22,8 +23,11 @@ class KakaoLoginAPIView(views.APIView):
         serializer = social_login.KakaoLoginSerializer(data=request.data)
         if serializer.is_valid():
             kakao_access_token = serializer.validated_data['kakao_access_token']
+            logging.debug(f'kakao access token : {kakao_access_token}')
             kakao_user_profile = kakao_account.get_user_profile(kakao_access_token)
             print("kakao user profile for : ", kakao_user_profile)
+
+            logging.debug(f"kakao user profile for : {kakao_user_profile}")
             kakao_user_id = kakao_user_profile['id']
             try:
                 auth = get_auth_by_identifier_with_login_type(identifier=str(kakao_user_id), login_type=Auth.LoginType.Kakao)

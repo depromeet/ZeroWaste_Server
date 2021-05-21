@@ -1,8 +1,8 @@
-from rest_framework import viewsets, mixins, status
+from rest_framework import viewsets, mixins, status, permissions
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from django.contrib.auth import get_user_model
 from django.utils.decorators import method_decorator
-from rest_framework.decorators import api_view, authentication_classes
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
 
 from apps.user.serializers.models import UserSerializer
@@ -105,6 +105,7 @@ class UserViewSet(viewsets.GenericViewSet,
      )])
 @api_view(['GET'])
 @authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def double_check(request):
     nickname = request.GET.get("nickname", None)
     if not nickname:
