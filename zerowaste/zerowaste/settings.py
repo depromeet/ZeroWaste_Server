@@ -214,17 +214,6 @@ logging.config.dictConfig({
 })
 
 # AWS
-DEFAULT_FILE_STORAGE = 'config.asset_storage.MediaStorage'
-
-AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID', default='AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY', default='AWS_ACCESS_KEY_ID')
 AWS_SIGNATURE_VERSION = 's3v4'
 AWS_REGION = 'us-east-2'
 AWS_STORAGE_BUCKET_NAME = 'zerowaste-bucket1'
-AWS_S3_CUSTOM_DOMAIN = '%s.s3.%s.amazonaws.com' % (
-    AWS_STORAGE_BUCKET_NAME, AWS_REGION
-)
-AWS_S3_OBJECT_PARAMETERS = {
-    'CacheControl' : 'max-age=86400',
-}
-AWS_DEFAULT_ACL = 'public-read'
