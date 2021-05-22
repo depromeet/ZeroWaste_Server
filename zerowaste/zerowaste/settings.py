@@ -4,6 +4,7 @@ from django.utils.log import DEFAULT_LOGGING
 from dotenv import load_dotenv
 from os.path import join, dirname
 import datetime
+from .local_settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
 
 dotenv_path = join(dirname(__file__), '../.env')
 load_dotenv(dotenv_path)
@@ -47,7 +48,10 @@ INSTALLED_APPS = [
     # developed apps
     'apps.core',
     'apps.user',
-    'apps.mission'
+    'apps.mission',
+
+    # S3 storage
+    'storages'
 ]
 
 GRAPH_MODELS = {
@@ -209,3 +213,25 @@ logging.config.dictConfig({
         },
     },
 })
+
+# AWS
+DEFAULT_FILE_STORAGE = 'config.asset_storage.MediaStorage'
+
+AWS_ACCESS_KEY_ID = AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY = AWS_SECRET_ACCESS_KEY
+
+AWS_REGION = 'us-east-2'
+AWS_STORAGE_BUCKET_NAME = 'zerowaste-bucket1'
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.%s.amazonaws.com' % (
+    AWS_STORAGE_BUCKET_NAME, AWS_REGION
+)
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl' : 'max-age=86400',
+}
+AWS_DEFAULT_ACL = 'public-read'
+AWS_LOCATION = 'test'
+TESTFILE_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+TESTFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+TESTFILES_DIRS = [
+    os.path.join(BASE_DIR, 'test')
+]
