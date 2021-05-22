@@ -47,10 +47,7 @@ INSTALLED_APPS = [
     # developed apps
     'apps.core',
     'apps.user',
-    'apps.mission',
-
-    # S3 storage
-    'storages'
+    'apps.mission'
 ]
 
 GRAPH_MODELS = {
