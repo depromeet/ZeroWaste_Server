@@ -17,7 +17,8 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG = bool(os.environ.get("DJANGO_DEBUG_MODE", "True"))
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1',
-                 '18.217.57.135', 'ec2-18-217-57-135.us-east-2.compute.amazonaws.com']
+                 '18.217.57.135', 'ec2-18-217-57-135.us-east-2.compute.amazonaws.com', 
+                 'ec2-18-218-186-160.us-east-2.compute.amazonaws.com', 'woozoo.beautyvillage.net', '18.218.186.160']
 
 ENVIRONMENT = os.environ.get('ENVIRONMENT', default='LOCAL')
 
@@ -40,6 +41,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'drf_yasg',
+    'django_mysql',
+    'django_filters',
 
     # developed apps
     'apps.core',
@@ -71,6 +74,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'EXCEPTION_HANDLER': 'apps.core.utils.views.custom_exception_handler',
 }
 

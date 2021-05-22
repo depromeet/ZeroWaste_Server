@@ -24,7 +24,14 @@ $ pip install -r requirements.txt
 
 Windows:
 ```
-<install_command> @kyunghee_lee
+$ python -m venv env 
+$ env\Script\activate
+$ pip install -r requirements.txt
+
+
+$ pip install virtualenv==20.4.3
+$ virtualenv venv
+$ pip install -r requirements.txt
 ```
 
 ## Run ZeroWaste_Server

@@ -1,4 +1,5 @@
 from rest_framework import permissions
+from apps.user.models.user import User
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
@@ -13,4 +14,6 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
             return True
 
         # Write permissions are only allowed to the owner of the snippet.
-        return request.user.is_authenticated and obj == request.user
+        if isinstance(obj, User):
+            return request.user.is_authenticated and obj == request.user
+        return request.user.is_authenticated and obj.owner == request.user

@@ -18,7 +18,7 @@ from drf_yasg.utils import swagger_auto_schema
 @method_decorator(name='partial_update',
     decorator=swagger_auto_schema(
         tags=['users'],
-        operation_description="User 정보 업데이트",
+        operation_description="User 정보 업데이트(부분)",
         manual_parameters=[
             openapi.Parameter(
                 'Authorization', openapi.IN_HEADER,
