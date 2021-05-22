@@ -21,7 +21,7 @@ from drf_yasg.utils import swagger_auto_schema
 @method_decorator(name='partial_update',
     decorator=swagger_auto_schema(
         tags=['users'],
-        operation_description="User 정보 업데이트(부분)",
+        operation_description="User 정보 업데이트 \n 유저 정보 업데이트 시 리턴되는 token으로 변경해서 Authorization을 보내주어야 합니다.",
         manual_parameters=[
             openapi.Parameter(
                 'Authorization', openapi.IN_HEADER,
