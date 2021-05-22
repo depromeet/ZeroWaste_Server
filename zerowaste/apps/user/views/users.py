@@ -4,12 +4,15 @@ from django.contrib.auth import get_user_model
 from django.utils.decorators import method_decorator
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
+from rest_framework_jwt.serializers import jwt_payload_handler
 
 from apps.user.serializers.models import UserSerializer
 from apps.core import permissions as custom_permission
 from apps.core import constants, exceptions
 from apps.core.utils.response import build_response_body
 from apps.user.services.users import nickname_double_check
+from apps.user.services.models import get_auth_by_user_id, record_user_token
+from apps.core.mixins import PartialUpdateModelMixin
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -19,25 +22,6 @@ from drf_yasg.utils import swagger_auto_schema
     decorator=swagger_auto_schema(
         tags=['users'],
         operation_description="User 정보 업데이트(부분)",
-        manual_parameters=[
-            openapi.Parameter(
-                'Authorization', openapi.IN_HEADER,
-                type=openapi.TYPE_STRING,
-                description=constants.USER_JWT_TOKEN
-            ),
-        ],
-        responses={
-            200: UserSerializer,
-            401: 'Authentication Failed(40100)',
-            403: 'Permission denied(403)',
-            404: 'Not found(404)'
-        }
-    )
-)
-@method_decorator(name='update',
-    decorator=swagger_auto_schema(
-        tags=['users'],
-        operation_description="User 정보 전체 업데이트(덮어쓰기)",
         manual_parameters=[
             openapi.Parameter(
                 'Authorization', openapi.IN_HEADER,
@@ -74,7 +58,7 @@ from drf_yasg.utils import swagger_auto_schema
 )
 class UserViewSet(viewsets.GenericViewSet,
                   mixins.RetrieveModelMixin,
-                  mixins.UpdateModelMixin,
+                  PartialUpdateModelMixin,
                   mixins.DestroyModelMixin,
                   mixins.ListModelMixin):
     authentication_classes = [JSONWebTokenAuthentication]
@@ -83,8 +67,14 @@ class UserViewSet(viewsets.GenericViewSet,
     serializer_class = UserSerializer
 
     def partial_update(self, request, *args, **kwargs):
-        nickname_double_check(request.user, request.data.get('nickname', None))
-        return super().partial_update(request, *args, **kwargs, partial=True)
+        try:
+            nickname_double_check(request.user, request.data.get('nickname', None))
+            response = super().partial_update(request, *args, **kwargs, partial=True)
+            auth = record_user_token(get_auth_by_user_id(request.user.id))
+            response.data['data']['token'] = auth.token
+            return response
+        except Exception:
+            raise exceptions.InternalServerError()
 
 
 @swagger_auto_schema(
