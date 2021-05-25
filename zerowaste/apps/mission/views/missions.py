@@ -1,12 +1,17 @@
-from rest_framework import viewsets, mixins, permissions
+from rest_framework import viewsets, mixins, permissions, status
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from rest_framework.response import Response
 from django.utils.decorators import method_decorator
 from django_filters.rest_framework import DjangoFilterBackend
 
 from apps.core import permissions as custom_permission
 from apps.mission.serializers.models import MissionSerializer
 from apps.mission.models.mission import Mission
+from apps.mission.services.missions import separate_url_to_signed_public
+from apps.mission.services.models import create_mission
 from apps.core import constants
+from apps.core.utils.response import build_response_body
+from apps.user.serializers.models import UserSerializer
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -152,4 +157,13 @@ class MissionViewSet(viewsets.GenericViewSet,
         return super(MissionViewSet, self).get_permissions()
 
     def create(self, request, *args, **kwargs):
-        return super(MissionViewSet, self).create(request, *args, **kwargs)
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            signed_url_num = request.data.get('signed_url_num', 0)
+            signed_url_list, public_url_list = separate_url_to_signed_public(signed_url_num, request.user)
+            create_mission(serializer.validated_data, request.user, public_url_list)
+
+            result = serializer.validated_data
+            result['owner'] = UserSerializer(result['owner']).data['data']
+            result['signed_url_list'] = signed_url_list
+            return Response(data=build_response_body(result), status=status.HTTP_200_OK)

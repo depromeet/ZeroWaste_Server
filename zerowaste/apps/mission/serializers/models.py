@@ -4,7 +4,8 @@ from apps.mission.models.mission import Mission
 from apps.mission.models.certification import Certification
 from apps.mission.models.participation import Participation
 from apps.mission.models.likes import MissionLike
-from apps.mission.services.models import get_participation_by_mission_and_owner, is_user_liked_mission
+from apps.mission.services.models import get_participation_by_mission_and_owner, \
+    is_user_liked_mission
 from apps.core.utils.response import build_response_body
 from apps.user.services.models import get_user_by_id
 from apps.user.serializers.models import UserSerializer
@@ -12,20 +13,24 @@ from apps.core.exceptions import ValidationError
 
 
 class MissionSerializer(serializers.ModelSerializer):
+    signed_url_num = serializers.IntegerField(required=False)
     _THEME_LIST = ('refuse', 'reduce', 'reuse', 'recycle', 'rot')
 
     class Meta:
         model = Mission
-        fields = ('id', 'name', 'owner', 'place', 'theme', "difficulty", "logo_img_url", "icon_img_url", "content", 'sentence_for_cheer')
+        fields = (
+        'id', 'name', 'owner', 'place', 'theme', "difficulty", "banner_img_urls", "content",
+        'sentence_for_cheer', 'signed_url_num')
 
     def validate(self, data):
-        place = self.initial_data.get('place',None)
+        place = self.initial_data.get('place', None)
         if place and not place in Mission.Place:
             raise ValidationError(f'{self.initial_data["place"]} is not in {Mission.Place.choices}')
 
         difficulty = self.initial_data.get('difficulty', None)
         if difficulty and not difficulty in Mission.Difficulty:
-            raise ValidationError(f'{self.initial_data["difficulty"]} is not in {Mission.Difficulty.choices}')
+            raise ValidationError(
+                f'{self.initial_data["difficulty"]} is not in {Mission.Difficulty.choices}')
 
         theme = self.initial_data.get('theme', [])
         for theme_item in theme:
@@ -44,7 +49,7 @@ class MissionSerializer(serializers.ModelSerializer):
         creater = get_user_by_id(value['owner'])
         value['creater'] = UserSerializer(creater).data['data']
         value['theme'] = instance.theme
-        
+
         request = self.context.get("request")
         if request and not request.user.is_anonymous:
             participation = get_participation_by_mission_and_owner(instance, request.user)
@@ -57,7 +62,6 @@ class MissionSerializer(serializers.ModelSerializer):
 
 
 class ParticipationSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Participation
         fields = ('id', 'status', 'start_date', 'end_date')
