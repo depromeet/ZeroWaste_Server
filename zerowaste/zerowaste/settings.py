@@ -209,3 +209,8 @@ logging.config.dictConfig({
         },
     },
 })
+
+# AWS
+AWS_SIGNATURE_VERSION = 's3v4'
+AWS_REGION = 'us-east-2'
+AWS_STORAGE_BUCKET_NAME = 'zerowaste-bucket1'
