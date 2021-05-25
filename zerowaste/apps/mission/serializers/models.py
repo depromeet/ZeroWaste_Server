@@ -4,7 +4,7 @@ from apps.mission.models.mission import Mission
 from apps.mission.models.certification import Certification
 from apps.mission.models.participation import Participation
 from apps.mission.models.likes import MissionLike
-from apps.mission.services.models import get_participation_by_mission_and_owner
+from apps.mission.services.models import get_participation_by_mission_and_owner, is_user_liked_mission
 from apps.core.utils.response import build_response_body
 from apps.user.services.models import get_user_by_id
 from apps.user.serializers.models import UserSerializer
@@ -44,11 +44,15 @@ class MissionSerializer(serializers.ModelSerializer):
         creater = get_user_by_id(value['owner'])
         value['creater'] = UserSerializer(creater).data['data']
         value['theme'] = instance.theme
-        participation = get_participation_by_mission_and_owner(instance, creater)
-        if participation:
-            value['participation'] = ParticipationSerializer(participation).data
-        else:
-            value['participation'] = {'status': 'none'}
+        
+        request = self.context.get("request")
+        if request and not request.user.is_anonymous:
+            participation = get_participation_by_mission_and_owner(instance, request.user)
+            if participation:
+                value['participation'] = ParticipationSerializer(participation).data
+            else:
+                value['participation'] = {'status': 'none'}
+            value['is_liked'] = is_user_liked_mission(instance, request.user)
         return build_response_body(data=value)
 
 

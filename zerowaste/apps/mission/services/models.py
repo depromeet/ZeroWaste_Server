@@ -1,5 +1,6 @@
 from apps.mission.models.mission import Mission
 from apps.mission.models.participation import Participation
+from apps.mission.models.likes import MissionLike
 
 from datetime import datetime, timedelta
 
@@ -59,3 +60,9 @@ def update_participation_status(participation_id, mission, status):
 def get_participations_by_owner(owner, status=Participation.Status.SUCCESS):
     participations = Participation.objects.filter(owner=owner, status=status)
     return participations
+
+
+def is_user_liked_mission(mission, user):
+    result = True if MissionLike.objects.filter(mission=mission, owner=user) else False
+    print(result)
+    return result

@@ -12,6 +12,44 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
 
+@method_decorator(name='list',
+    decorator=swagger_auto_schema(
+        tags=['missions'],
+        operation_description="Mission 리스트 조회 \n JWT TOKEN 기입 시 미션 참여 및 좋아요 여부 결과를 받을 수 있습니다.",
+        manual_parameters=[
+            openapi.Parameter(
+                'Authorization', openapi.IN_HEADER,
+                type=openapi.TYPE_STRING,
+                description=constants.USER_JWT_TOKEN
+            ),
+        ],
+        responses={
+            200: MissionSerializer,
+            401: 'Authentication Failed(40100)',
+            403: 'Permission denied(403)',
+            404: 'Not found(404)'
+        }
+    )
+)
+@method_decorator(name='retrieve',
+    decorator=swagger_auto_schema(
+        tags=['missions'],
+        operation_description="Mission 객체 조회 \n JWT TOKEN 기입 시 미션 참여 및 좋아요 여부 결과를 받을 수 있습니다.",
+        manual_parameters=[
+            openapi.Parameter(
+                'Authorization', openapi.IN_HEADER,
+                type=openapi.TYPE_STRING,
+                description=constants.USER_JWT_TOKEN
+            ),
+        ],
+        responses={
+            200: MissionSerializer,
+            401: 'Authentication Failed(40100)',
+            403: 'Permission denied(403)',
+            404: 'Not found(404)'
+        }
+    )
+)
 @method_decorator(name='create',
     decorator=swagger_auto_schema(
         tags=['missions'],
