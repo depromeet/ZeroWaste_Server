@@ -4,7 +4,6 @@ from apps.mission.models.mission import Mission
 from apps.mission.models.certification import Certification
 from apps.mission.models.participation import Participation
 from apps.mission.models.likes import MissionLike
-from apps.mission.models.scraps import MissionScrap
 from apps.mission.services.models import get_participation_by_mission_and_owner
 from apps.core.utils.response import build_response_body
 from apps.user.services.models import get_user_by_id
@@ -74,12 +73,6 @@ class ParticipationNoneFieldSerializer(serializers.BaseSerializer):
 class MissionLikeSerializer(serializers.BaseSerializer):
     class Meta:
         model = MissionLike
-        fields = ''
-
-
-class MissionScrapSerializer(serializers.BaseSerializer):
-    class Meta:
-        model = MissionScrap
         fields = ''
 
 
