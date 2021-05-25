@@ -5,6 +5,7 @@ from apps.mission.models.certification import Certification
 from apps.mission.models.participation import Participation
 from apps.mission.models.likes import MissionLike
 from apps.mission.models.scraps import MissionScrap
+from apps.mission.services.models import get_participation_by_mission_and_owner
 from apps.core.utils.response import build_response_body
 from apps.user.services.models import get_user_by_id
 from apps.user.serializers.models import UserSerializer
@@ -39,13 +40,16 @@ class MissionSerializer(serializers.ModelSerializer):
         if request and hasattr(request, "user"):
             self.initial_data['owner'] = request.user
 
-    #TODO: 해당 사용자가 인증을 작성할 수 있는지 여부 -> Participation 상태 리턴
-    #participation_state -> none, ready, progress, success, failure
     def to_representation(self, instance):
         value = super(MissionSerializer, self).to_representation(instance)
         creater = get_user_by_id(value['owner'])
         value['creater'] = UserSerializer(creater).data['data']
         value['theme'] = instance.theme
+        participation = get_participation_by_mission_and_owner(instance, creater)
+        if participation:
+            value['participation'] = ParticipationSerializer(participation).data
+        else:
+            value['participation'] = {'status': 'none'}
         return build_response_body(data=value)
 
 
