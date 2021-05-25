@@ -11,7 +11,7 @@ from apps.core import permissions as custom_permission
 from apps.core import constants, exceptions
 from apps.core.utils.response import build_response_body
 from apps.user.services.users import nickname_double_check
-from apps.user.services.models import get_auth_by_user_id, record_user_token
+from apps.user.services.models import get_auth_by_user, record_user_token
 from apps.core.mixins import PartialUpdateModelMixin
 
 from drf_yasg import openapi
@@ -70,7 +70,7 @@ class UserViewSet(viewsets.GenericViewSet,
         try:
             nickname_double_check(request.user, request.data.get('nickname', None))
             response = super().partial_update(request, *args, **kwargs, partial=True)
-            auth = record_user_token(get_auth_by_user_id(request.user.id))
+            auth = record_user_token(get_auth_by_user(request.user))
             response.data['data']['token'] = auth.token
             return response
         except Exception:
