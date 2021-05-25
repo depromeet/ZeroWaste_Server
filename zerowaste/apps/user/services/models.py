@@ -21,7 +21,7 @@ def get_auth_by_user(user):
 
 
 def create_auth(identifier, email, user, social_token, login_type):
-    auth = Auth(identifier=str(identifier), email=email, user_id=user, social_token=social_token,
+    auth = Auth(identifier=str(identifier), email=email, user=user, social_token=social_token,
                 login_type=login_type)
     auth.save()
     return auth
@@ -34,7 +34,7 @@ def get_user_by_id(user_id):
 
 def record_user_token(auth, token=None):
     if not token:
-        token = get_user_token(get_user_by_id(auth.user.id))
+        token = get_user_token(auth.user)
     auth.token = token
     auth.save()
     return auth
