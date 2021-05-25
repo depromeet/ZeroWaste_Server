@@ -18,6 +18,14 @@ def get_mission_by_id(mission_id):
     return mission
 
 
+def create_mission(mission_data, owner, public_url_list):
+    mission = Mission(name=mission_data['name'], owner=owner, place=mission_data['place'],
+                      theme=mission_data['theme'], difficulty=mission_data['difficulty'],
+                      banner_img_urls=public_url_list, content=mission_data.get('content', ''), sentence_for_cheer=mission_data.get('sentence_for_cheer', ""))
+    mission.save()
+    return mission
+
+
 def get_participation_by_mission_and_owner(mission, owner):
     try:
         participation = Participation.objects.get(mission=mission, owner=owner)
@@ -64,5 +72,4 @@ def get_participations_by_owner(owner, status=Participation.Status.SUCCESS):
 
 def is_user_liked_mission(mission, user):
     result = True if MissionLike.objects.filter(mission=mission, owner=user) else False
-    print(result)
     return result
