@@ -102,9 +102,9 @@ class MissionViewSet(viewsets.GenericViewSet,
     filter_backends = (DjangoFilterBackend,)
     filter_fields = ('place', 'difficulty', 'theme')
 
+    # TODO: v2 theme 중복조회 적용하기
     def get_queryset(self):
-        #TODO: theme 중복조회 적용하기
-        return super().get_queryset()
+        return super().get_queryset().filter(is_public=True)
 
     def get_permissions(self):
         if self.request.method == 'POST':

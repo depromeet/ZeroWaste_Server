@@ -35,4 +35,6 @@ class Mission(SoftDeleteModelBase):
     logo_img_url = models.CharField(max_length=200)
     icon_img_url = models.CharField(max_length=200)
     content = models.CharField(max_length=1000)
+    is_public = models.BooleanField(default=True)
+    sentence_for_cheer = models.CharField(max_length=50, default="")
 
