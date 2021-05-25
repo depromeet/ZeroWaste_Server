@@ -1,6 +1,6 @@
 asgiref==3.3.1
-boto3==1.17.77
-botocore==1.20.77
+boto3==1.17.78
+botocore==1.20.78
 bson==0.5.10
 certifi==2020.12.5
 cffi==1.14.5

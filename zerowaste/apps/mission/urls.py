@@ -1,5 +1,5 @@
 from django.urls import path, include
-from apps.mission.views import missions, certification, participations
+from apps.mission.views import missions, certification, participations, likes
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
@@ -9,4 +9,6 @@ router.register('^missions/(?P<mission_id>[0-9]+)/participations', participation
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('missions/<int:mission_id>/like', likes.MissionLikeViewSet.as_view({'post': 'create'})),
+    path('missions/<int:mission_id>/dislike', likes.MissionLikeViewSet.as_view({'delete': 'destroy'}))
 ]
