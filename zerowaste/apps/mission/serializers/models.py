@@ -85,7 +85,7 @@ class CertificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Certification
         fields = ('id', 'name', 'owner', 'mission_id', "img_url", "content", 'isPublic', 'percieved_difficulty')
-
+    # TODO: content, percieved_difficulty validation check를 위한 함수 생성
     def validate(self, attrs):
         return self.initial_data
 
