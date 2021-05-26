@@ -67,6 +67,6 @@ jobs:
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
-        service: sample-app-service
+        service: zero-waste-production-service
         cluster: django-app
         wait-for-service-stability: true
