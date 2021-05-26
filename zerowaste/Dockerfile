@@ -15,9 +15,7 @@ RUN pip3 install -r requirements.txt
 
 RUN mkdir /zerowaste
 COPY . /zerowaste/
-RUN cd zerowaste
+WORKDIR ./zerowaste
 
 EXPOSE 8000
-
-# running server
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
