@@ -15,6 +15,7 @@ RUN pip3 install -r requirements.txt
 
 RUN mkdir /zerowaste
 COPY . /zerowaste/
+RUN cd zerowaste
 
 EXPOSE 8000
 
