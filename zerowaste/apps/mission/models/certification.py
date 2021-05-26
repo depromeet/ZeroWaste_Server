@@ -11,4 +11,3 @@ class Certification(SoftDeleteModelBase):
     content = models.CharField(max_length=1500)
     image = models.CharField(max_length=200)
     isPublic = models.BooleanField(default=True)
-

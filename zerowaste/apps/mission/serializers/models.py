@@ -81,11 +81,10 @@ class MissionLikeSerializer(serializers.BaseSerializer):
 
 
 class CertificationSerializer(serializers.ModelSerializer):
-    mission_id = ParticipationSerializer(read_only=True)
 
     class Meta:
         model = Certification
-        fields = ('id', 'name', 'owner', 'mission_id', "image", "content", 'isPublic')
+        fields = ('id', 'name', 'owner', 'mission_id', "image", "content", 'isPublic', 'percieved_difficulty')
 
     def validate(self, attrs):
         return self.initial_data
@@ -95,9 +94,8 @@ class CertificationSerializer(serializers.ModelSerializer):
         if request and hasattr(request, "user"):
             self.initial_data['owner'] = request.user
 
-    # TODO: ?? certification에서는 creater로 키를 바꾸기보다, 그냥 owner 정보로 보여져도 될거같은데요?
+    # TODO: ?? certification에서는 creater로 키를 바꾸기보다, 그냥 owner 정보로 보여져도 될거같은데요? -> ???
     def to_representation(self, instance):
         value = super(CertificationSerializer, self).to_representation(instance)
-        creater = get_user_by_id(value['owner'])
-        value['creater'] = UserSerializer(creater).data['data']
+        value['owner'] = instance.owner
         return build_response_body(data=value)
