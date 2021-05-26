@@ -3,7 +3,7 @@ from rest_framework import serializers
 from apps.user.models.auth import Auth
 from apps.user.models.user import User
 from apps.mission.models.participation import Participation
-from apps.user.models.blocklist import BlockList
+from apps.user.models.reported_user import ReportedUser
 from apps.core.utils.response import build_response_body
 from apps.mission.services.models import get_participations_by_owner
 
@@ -26,7 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
         return build_response_body(data=value)
 
 
-class BlockListSerializer(serializers.ModelSerializer):
+class ReportedUserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = BlockList
+        model = ReportedUser
         fields = ('id', 'target_user_id', 'reporter_id', 'description')

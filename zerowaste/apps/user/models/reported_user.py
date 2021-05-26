@@ -1,7 +1,7 @@
 from apps.core.models.model_base import ModelBase
 from django.db import models
 
-class BlockList(ModelBase):
+class ReportedUser(ModelBase):
     class Description(models.TextChoices):
         SEXUAL = 'sexual'
         VIOLENCE = 'violence'
