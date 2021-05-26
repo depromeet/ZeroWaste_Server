@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from apps.user.models.auth import Auth
 from apps.user.models.user import User
+from apps.user.models.bazzi import Bazzi
 from apps.mission.models.participation import Participation
 from apps.user.models.blocklist import BlockList
 from apps.core.utils.response import build_response_body
@@ -31,3 +32,9 @@ class BlockListSerializer(serializers.ModelSerializer):
     class Meta:
         model = BlockList
         fields = ('id', 'target_user_id', 'reporter_id', 'description')
+
+
+class BazziSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bazzi
+        fields = '__all__'
