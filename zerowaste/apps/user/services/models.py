@@ -1,5 +1,6 @@
 from apps.user.models.user import User
 from apps.user.models.auth import Auth
+from apps.user.models.bazzi import Bazzi
 from apps.core.utils.tools import id_generator
 from apps.user.services.jwt_token import get_user_token
 
@@ -46,3 +47,8 @@ def get_user_by_nickname(nickname):
     except User.DoesNotExist:
         user = None
     return user
+
+
+def get_bazzi_by_id(bazzi_id):
+    bazzi = Bazzi.objects.get(id=bazzi_id)
+    return bazzi
