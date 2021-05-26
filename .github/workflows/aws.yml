@@ -60,7 +60,7 @@ jobs:
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
         task-definition: ./zerowaste/task-definition.json
-        container-name: django-app
+        container-name: zero-waste-production
         image: ${{ steps.build-image.outputs.image }}
 
     - name: Deploy Amazon ECS task definition
@@ -68,5 +68,5 @@ jobs:
       with:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
         service: sample-app-service
-        cluster: default
+        cluster: django-app
         wait-for-service-stability: true
