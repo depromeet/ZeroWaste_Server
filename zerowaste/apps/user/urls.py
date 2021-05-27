@@ -15,7 +15,7 @@ urlpatterns = [
     # path('jwt-auth/', jwt_views.obtain_jwt_token),  # JWT 토큰 획득
     path('jwt-auth/refresh/', auth.CustomRefreshJSONWebToken.as_view()),
     path('jwt-auth/kakao/', social_login.KakaoLoginAPIView.as_view()),
-    path('jwt-auth/apple', social_login.AppleLoginAPIView.as_view()),
+    path('jwt-auth/apple/', social_login.AppleLoginAPIView.as_view()),
     path('users/double_check', users.double_check),
     path('', include(router.urls)),
     path('admin/', include(admin_router.urls))
