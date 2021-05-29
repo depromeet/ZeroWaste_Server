@@ -5,10 +5,11 @@ from django.db import models
 
 class Certification(SoftDeleteModelBase):
     class Percieved_difficulty(models.TextChoices):
-        HARD = 'hard'
-        MEDIUM = 'medium'
+        VERY_EASY = 'very_easy'
         EASY = 'easy'
-        FIT = 'fit'
+        MEDIUM = 'medium'
+        HARD = 'hard'
+        EXTRA_HARD = 'extra_hard'
 
     name = models.CharField(max_length=50, default="")
     mission_id = models.ForeignKey("Mission", related_name="certified_mission", on_delete=models.DO_NOTHING,
