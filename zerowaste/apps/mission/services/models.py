@@ -73,3 +73,8 @@ def get_participations_by_owner(owner, status=Participation.Status.SUCCESS):
 def is_user_liked_mission(mission, user):
     result = True if MissionLike.objects.filter(mission=mission, owner=user) else False
     return result
+
+
+def get_liked_missions_by_owner(owner):
+    liked_missions = MissionLike.objects.filter(owner=owner)
+    return liked_missions
