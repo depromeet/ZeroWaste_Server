@@ -58,6 +58,9 @@ class MissionSerializer(serializers.ModelSerializer):
             else:
                 value['participation'] = {'status': 'none'}
             value['is_liked'] = is_user_liked_mission(instance, request.user)
+
+        if hasattr(self, 'action') and self.action == 'list':
+            return value
         return build_response_body(data=value)
 
 

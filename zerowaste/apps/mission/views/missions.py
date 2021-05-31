@@ -18,125 +18,125 @@ from drf_yasg.utils import swagger_auto_schema
 
 
 @method_decorator(name='list',
-    decorator=swagger_auto_schema(
-        tags=['missions'],
-        operation_description="Mission 리스트 조회 \n JWT TOKEN 기입 시 미션 참여 및 좋아요 여부 결과를 받을 수 있습니다.",
-        manual_parameters=[
-            openapi.Parameter(
-                'Authorization', openapi.IN_HEADER,
-                type=openapi.TYPE_STRING,
-                description=constants.USER_JWT_TOKEN
-            ),
-        ],
-        responses={
-            200: MissionSerializer,
-            401: 'Authentication Failed(40100)',
-            403: 'Permission denied(403)',
-            404: 'Not found(404)'
-        }
-    )
-)
+                  decorator=swagger_auto_schema(
+                      tags=['missions'],
+                      operation_description="Mission 리스트 조회 \n JWT TOKEN 기입 시 미션 참여 및 좋아요 여부 결과를 받을 수 있습니다.",
+                      manual_parameters=[
+                          openapi.Parameter(
+                              'Authorization', openapi.IN_HEADER,
+                              type=openapi.TYPE_STRING,
+                              description=constants.USER_JWT_TOKEN
+                          ),
+                      ],
+                      responses={
+                          200: MissionSerializer,
+                          401: 'Authentication Failed(40100)',
+                          403: 'Permission denied(403)',
+                          404: 'Not found(404)'
+                      }
+                  )
+                  )
 @method_decorator(name='retrieve',
-    decorator=swagger_auto_schema(
-        tags=['missions'],
-        operation_description="Mission 객체 조회 \n JWT TOKEN 기입 시 미션 참여 및 좋아요 여부 결과를 받을 수 있습니다.",
-        manual_parameters=[
-            openapi.Parameter(
-                'Authorization', openapi.IN_HEADER,
-                type=openapi.TYPE_STRING,
-                description=constants.USER_JWT_TOKEN
-            ),
-        ],
-        responses={
-            200: MissionSerializer,
-            401: 'Authentication Failed(40100)',
-            403: 'Permission denied(403)',
-            404: 'Not found(404)'
-        }
-    )
-)
+                  decorator=swagger_auto_schema(
+                      tags=['missions'],
+                      operation_description="Mission 객체 조회 \n JWT TOKEN 기입 시 미션 참여 및 좋아요 여부 결과를 받을 수 있습니다.",
+                      manual_parameters=[
+                          openapi.Parameter(
+                              'Authorization', openapi.IN_HEADER,
+                              type=openapi.TYPE_STRING,
+                              description=constants.USER_JWT_TOKEN
+                          ),
+                      ],
+                      responses={
+                          200: MissionSerializer,
+                          401: 'Authentication Failed(40100)',
+                          403: 'Permission denied(403)',
+                          404: 'Not found(404)'
+                      }
+                  )
+                  )
 @method_decorator(name='create',
-    decorator=swagger_auto_schema(
-        tags=['missions'],
-        operation_description="Mission 생성",
-        manual_parameters=[
-            openapi.Parameter(
-                'Authorization', openapi.IN_HEADER,
-                type=openapi.TYPE_STRING,
-                description=constants.USER_JWT_TOKEN
-            ),
-        ],
-        responses={
-            200: MissionSerializer,
-            401: 'Authentication Failed(40100)',
-            403: 'Permission denied(403)',
-            404: 'Not found(404)'
-        }
-    )
-)
+                  decorator=swagger_auto_schema(
+                      tags=['missions'],
+                      operation_description="Mission 생성",
+                      manual_parameters=[
+                          openapi.Parameter(
+                              'Authorization', openapi.IN_HEADER,
+                              type=openapi.TYPE_STRING,
+                              description=constants.USER_JWT_TOKEN
+                          ),
+                      ],
+                      responses={
+                          200: MissionSerializer,
+                          401: 'Authentication Failed(40100)',
+                          403: 'Permission denied(403)',
+                          404: 'Not found(404)'
+                      }
+                  )
+                  )
 @method_decorator(name='partial_update',
-    decorator=swagger_auto_schema(
-        tags=['missions'],
-        operation_description="Mission 정보 업데이트(부분)",
-        manual_parameters=[
-            openapi.Parameter(
-                'Authorization', openapi.IN_HEADER,
-                type=openapi.TYPE_STRING,
-                description=constants.USER_JWT_TOKEN
-            ),
-        ],
-        responses={
-            200: MissionSerializer,
-            401: 'Authentication Failed(40100)',
-            403: 'Permission denied(403)',
-            404: 'Not found(404)'
-        }
-    )
-)
+                  decorator=swagger_auto_schema(
+                      tags=['missions'],
+                      operation_description="Mission 정보 업데이트(부분)",
+                      manual_parameters=[
+                          openapi.Parameter(
+                              'Authorization', openapi.IN_HEADER,
+                              type=openapi.TYPE_STRING,
+                              description=constants.USER_JWT_TOKEN
+                          ),
+                      ],
+                      responses={
+                          200: MissionSerializer,
+                          401: 'Authentication Failed(40100)',
+                          403: 'Permission denied(403)',
+                          404: 'Not found(404)'
+                      }
+                  )
+                  )
 @method_decorator(name='update',
-    decorator=swagger_auto_schema(
-        tags=['missions'],
-        operation_description="Mission 정보 전체 업데이트(덮어쓰기)",
-        manual_parameters=[
-            openapi.Parameter(
-                'Authorization', openapi.IN_HEADER,
-                type=openapi.TYPE_STRING,
-                description=constants.USER_JWT_TOKEN
-            ),
-        ],
-        responses={
-            200: MissionSerializer,
-            401: 'Authentication Failed(40100)',
-            403: 'Permission denied(403)',
-            404: 'Not found(404)'
-        }
-    )
-)
+                  decorator=swagger_auto_schema(
+                      tags=['missions'],
+                      operation_description="Mission 정보 전체 업데이트(덮어쓰기)",
+                      manual_parameters=[
+                          openapi.Parameter(
+                              'Authorization', openapi.IN_HEADER,
+                              type=openapi.TYPE_STRING,
+                              description=constants.USER_JWT_TOKEN
+                          ),
+                      ],
+                      responses={
+                          200: MissionSerializer,
+                          401: 'Authentication Failed(40100)',
+                          403: 'Permission denied(403)',
+                          404: 'Not found(404)'
+                      }
+                  )
+                  )
 @method_decorator(name='destroy',
-    decorator=swagger_auto_schema(
-        tags=['missions'],
-        operation_description="Mission 정보 삭제",
-        manual_parameters=[
-            openapi.Parameter(
-                'Authorization', openapi.IN_HEADER,
-                type=openapi.TYPE_STRING,
-                description=constants.USER_JWT_TOKEN
-            ),
-        ],
-        responses={
-            200: MissionSerializer,
-            401: 'Authentication Failed(40100)',
-            403: 'Permission denied(403)',
-            404: 'Not found(404)'
-        }
-    )
-)
+                  decorator=swagger_auto_schema(
+                      tags=['missions'],
+                      operation_description="Mission 정보 삭제",
+                      manual_parameters=[
+                          openapi.Parameter(
+                              'Authorization', openapi.IN_HEADER,
+                              type=openapi.TYPE_STRING,
+                              description=constants.USER_JWT_TOKEN
+                          ),
+                      ],
+                      responses={
+                          200: MissionSerializer,
+                          401: 'Authentication Failed(40100)',
+                          403: 'Permission denied(403)',
+                          404: 'Not found(404)'
+                      }
+                  )
+                  )
 class MissionViewSet(viewsets.GenericViewSet,
                      mixins.CreateModelMixin,
-                  mixins.RetrieveModelMixin,
-                  mixins.UpdateModelMixin,
-                  mixins.DestroyModelMixin,
-                  mixins.ListModelMixin):
+                     mixins.RetrieveModelMixin,
+                     mixins.UpdateModelMixin,
+                     mixins.DestroyModelMixin,
+                     mixins.ListModelMixin):
     authentication_classes = [JSONWebTokenAuthentication]
     permission_classes = [custom_permission.IsOwnerOrReadOnly]
     permission_classes_by_action = {'create': [permissions.AllowAny]}
@@ -161,7 +161,8 @@ class MissionViewSet(viewsets.GenericViewSet,
         if serializer.is_valid():
             try:
                 signed_url_num = request.data.get('signed_url_num', 0)
-                signed_url_list, public_url_list = separate_url_to_signed_public(signed_url_num, request.user)
+                signed_url_list, public_url_list = separate_url_to_signed_public(signed_url_num,
+                                                                                 request.user)
                 mission = create_mission(serializer.validated_data, request.user, public_url_list)
 
                 result = serializer.validated_data
@@ -169,5 +170,12 @@ class MissionViewSet(viewsets.GenericViewSet,
                 result['owner'] = UserSerializer(result['owner']).data['data']
                 result['signed_url_list'] = signed_url_list
                 return Response(data=build_response_body(result), status=status.HTTP_200_OK)
-            except:
+            except Exception:
                 raise exceptions.InternalServerError()
+
+    def list(self, request, *args, **kwargs):
+        try:
+            response = super(MissionViewSet, self).list(request, *args, **kwargs)
+            return Response(data=build_response_body(response.data), status=status.HTTP_200_OK)
+        except Exception:
+            raise exceptions.InternalServerError()
