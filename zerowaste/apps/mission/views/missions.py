@@ -162,9 +162,10 @@ class MissionViewSet(viewsets.GenericViewSet,
             try:
                 signed_url_num = request.data.get('signed_url_num', 0)
                 signed_url_list, public_url_list = separate_url_to_signed_public(signed_url_num, request.user)
-                create_mission(serializer.validated_data, request.user, public_url_list)
+                mission = create_mission(serializer.validated_data, request.user, public_url_list)
 
                 result = serializer.validated_data
+                result['id'] = int(mission.id)
                 result['owner'] = UserSerializer(result['owner']).data['data']
                 result['signed_url_list'] = signed_url_list
                 return Response(data=build_response_body(result), status=status.HTTP_200_OK)
