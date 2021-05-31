@@ -25,6 +25,9 @@ class UserSerializer(serializers.ModelSerializer):
         value['completed_mission_counts'] = len(get_participations_by_owner(instance))
         value['progressing_mission_counts'] = len(get_participations_by_owner(instance, status=Participation.Status.READY))
         value['liked_mission_counts'] = len(get_liked_missions_by_owner(instance))
+
+        if hasattr(self, 'action') and self.action == 'list':
+            return value
         return build_response_body(data=value)
 
 

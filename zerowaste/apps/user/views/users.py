@@ -66,6 +66,13 @@ class UserViewSet(viewsets.GenericViewSet,
     queryset = get_user_model().objects
     serializer_class = UserSerializer
 
+    def list(self, request, *args, **kwargs):
+        try:
+            response = super(UserViewSet, self).list(request, *args, **kwargs)
+            return Response(data=build_response_body(response.data), status=status.HTTP_200_OK)
+        except Exception:
+            raise exceptions.InternalServerError()
+
     def partial_update(self, request, *args, **kwargs):
         try:
             nickname_double_check(request.user, request.data.get('nickname', None))

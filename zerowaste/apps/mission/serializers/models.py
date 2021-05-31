@@ -49,6 +49,7 @@ class MissionSerializer(serializers.ModelSerializer):
         creater = get_user_by_id(value['owner'])
         value['creater'] = UserSerializer(creater).data['data']
         value['theme'] = instance.theme
+        value['banner_img_urls'] = instance.banner_img_urls
 
         request = self.context.get("request")
         if request and not request.user.is_anonymous:
@@ -58,6 +59,9 @@ class MissionSerializer(serializers.ModelSerializer):
             else:
                 value['participation'] = {'status': 'none'}
             value['is_liked'] = is_user_liked_mission(instance, request.user)
+
+        if hasattr(self, 'action') and self.action == 'list':
+            return value
         return build_response_body(data=value)
 
 
