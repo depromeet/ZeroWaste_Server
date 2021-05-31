@@ -23,6 +23,11 @@ from drf_yasg.utils import swagger_auto_schema
                       operation_description="Mission 리스트 조회 \n JWT TOKEN 기입 시 미션 참여 및 좋아요 여부 결과를 받을 수 있습니다.",
                       manual_parameters=[
                           openapi.Parameter(
+                              'theme', openapi.IN_QUERY,
+                              type=openapi.TYPE_STRING,
+                              description=constants.MISSION_THEME
+                          ),
+                          openapi.Parameter(
                               'Authorization', openapi.IN_HEADER,
                               type=openapi.TYPE_STRING,
                               description=constants.USER_JWT_TOKEN
@@ -143,11 +148,17 @@ class MissionViewSet(viewsets.GenericViewSet,
     queryset = Mission.objects
     serializer_class = MissionSerializer
     filter_backends = (DjangoFilterBackend,)
-    filter_fields = ('place', 'difficulty', 'theme')
+    filter_fields = ('place', 'difficulty')
 
     # TODO: v2 theme 중복조회 적용하기
     def get_queryset(self):
-        return super().get_queryset().filter(is_public=True)
+        super_queryset = super().get_queryset()
+        theme = self.request.query_params.get('theme')
+        if theme:
+            mission_querysets = super_queryset.filter(theme__contains=theme, is_public=True)
+        else:
+            mission_querysets = super_queryset.filter(is_public=True)
+        return mission_querysets
 
     def get_permissions(self):
         if self.request.method == 'POST':

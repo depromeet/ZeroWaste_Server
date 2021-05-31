@@ -4,3 +4,10 @@ USER_JWT_TOKEN = """
 Authroization: jwt <token>
 ```
 """
+
+MISSION_THEME = """
+*미션 THEME*
+```
+theme: 'refuse', 'reduce', 'reuse', 'recycle', 'rot'
+```
+"""
