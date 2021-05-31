@@ -22,6 +22,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         value = super(UserSerializer, self).to_representation(instance)
+        # TODO: len으로 세지말고, 조회 함수를 count로 사용하기 https://velog.io/@may_soouu/Django-%EB%A9%94%EC%86%8C%EB%93%9C-%EC%A0%95%EB%A6%AC
         value['completed_mission_counts'] = len(get_participations_by_owner(instance))
         value['progressing_mission_counts'] = len(get_participations_by_owner(instance, status=Participation.Status.READY))
         value['liked_mission_counts'] = len(get_liked_missions_by_owner(instance))
