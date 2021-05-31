@@ -60,8 +60,10 @@ class MissionSerializer(serializers.ModelSerializer):
                 value['participation'] = {'status': 'none'}
             value['is_liked'] = is_user_liked_mission(instance, request.user)
 
-        if hasattr(self, 'action') and self.action == 'list':
-            return value
+        if request:
+            pk = request.parser_context['kwargs'].get('pk', None)
+            if not pk: # (hasattr(self, 'action') and self.action == 'list')
+                return value
         return build_response_body(data=value)
 
 
