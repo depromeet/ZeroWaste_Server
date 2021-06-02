@@ -3,10 +3,12 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.response import Response
 from django.utils.decorators import method_decorator
 from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models import Count
 
 from apps.core import permissions as custom_permission
 from apps.mission.serializers.models import MissionSerializer
 from apps.mission.models.mission import Mission
+from apps.mission.models.participation import Participation
 from apps.mission.services.missions import separate_url_to_signed_public
 from apps.mission.services.models import create_mission
 from apps.core import constants, exceptions
@@ -26,6 +28,11 @@ from drf_yasg.utils import swagger_auto_schema
                               'theme', openapi.IN_QUERY,
                               type=openapi.TYPE_STRING,
                               description=constants.MISSION_THEME
+                          ),
+                          openapi.Parameter(
+                              'ordering', openapi.IN_QUERY,
+                              type=openapi.TYPE_STRING,
+                              description=constants.MISSION_ORDERING
                           ),
                           openapi.Parameter(
                               'Authorization', openapi.IN_HEADER,
@@ -158,6 +165,14 @@ class MissionViewSet(viewsets.GenericViewSet,
             mission_querysets = super_queryset.filter(theme__contains=theme, is_public=True)
         else:
             mission_querysets = super_queryset.filter(is_public=True)
+
+        ordering = self.request.query_params.get('ordering')
+        if ordering == "recent":
+            return mission_querysets.order_by('-created_at')
+        elif ordering == "popularity":
+            mission_querysets = Mission.objects.annotate(count=Count("like_mission")).order_by('-count', '-created_at')
+        elif ordering == "participation":
+            mission_querysets = Mission.objects.annotate(count=Count("participated_mission")).order_by('-count', '-created_at')
         return mission_querysets
 
     def get_permissions(self):

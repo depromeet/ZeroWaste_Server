@@ -11,3 +11,10 @@ MISSION_THEME = """
 theme: 'refuse', 'reduce', 'reuse', 'recycle', 'rot'
 ```
 """
+
+MISSION_ORDERING = """
+*미션 ORDERING*
+```
+theme: 'recent', 'popularity', 'participation'
+```
+"""
