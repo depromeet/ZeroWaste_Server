@@ -22,6 +22,11 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1',
 
 ENVIRONMENT = os.environ.get('ENVIRONMENT', default='LOCAL')
 BATCH_KEY = os.environ.get('BATCH_KEY', default=None)
+
+
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 # Application definition
 
 INSTALLED_APPS = [
