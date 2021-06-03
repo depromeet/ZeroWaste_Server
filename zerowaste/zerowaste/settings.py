@@ -21,6 +21,11 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1',
                  'ec2-18-218-186-160.us-east-2.compute.amazonaws.com', 'woozoo.beautyvillage.net', '18.218.186.160']
 
 ENVIRONMENT = os.environ.get('ENVIRONMENT', default='LOCAL')
+BATCH_KEY = os.environ.get('BATCH_KEY', default=None)
+
+
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Application definition
 
@@ -41,8 +46,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'drf_yasg',
-    'django_mysql',
     'django_filters',
+    'django_mysql_geventpool',
 
     # developed apps
     'apps.core',
@@ -127,12 +132,17 @@ WSGI_APPLICATION = 'zerowaste.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django_mysql_geventpool.backends.mysql',
         'NAME': 'zero_waste_db',
         'USER': os.environ.get("DATABASE_USER", "depromeet8"),
         'PASSWORD': os.environ.get("DATABASE_PASSWORD"),
         'HOST': os.environ.get("DATABASE_HOST", 'localhost'),
-        'PORT': '3306'
+        'PORT': '3306',
+        'CONN_MAX_AGE': 0,
+            'OPTIONS': {
+                'MAX_CONNS': 12,
+                'MAX_LIFETIME': 60
+            },
     }
 }
 

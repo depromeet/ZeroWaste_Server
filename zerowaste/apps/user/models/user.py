@@ -39,7 +39,7 @@ class User(AbstractUser, ModelBase):
     level = models.SmallIntegerField('level', default=1)
     is_notify = models.BooleanField(default=True)
     description = models.CharField(max_length=100, default="", null=True, blank=True)
-    # reported_counts = models.SmallIntegerField(default=0)
+    # user_profile 또는 user_profile_bazzi
 
     USERNAME_FIELD = 'nickname'
     REQUIRED_FIELDS = []

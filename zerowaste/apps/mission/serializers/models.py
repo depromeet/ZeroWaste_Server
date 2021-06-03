@@ -5,7 +5,7 @@ from apps.mission.models.certification import Certification
 from apps.mission.models.participation import Participation
 from apps.mission.models.likes import MissionLike
 from apps.mission.services.models import get_participation_by_mission_and_owner, \
-    is_user_liked_mission, get_number_of_participation_by_mission, get_liked_missions_counts_by_missions
+    is_user_liked_mission
 from apps.core.utils.response import build_response_body
 from apps.user.services.models import get_user_by_id
 from apps.user.serializers.models import UserSerializer

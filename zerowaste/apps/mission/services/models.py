@@ -88,3 +88,9 @@ def get_liked_missions_by_owner(owner):
 def get_liked_missions_counts_by_missions(mission):
     result = MissionLike.objects.filter(mission=mission).count()
     return result
+
+
+def get_participations_after_end_date(status=Participation.Status.READY, is_cron_checked=False):
+    now = datetime.now()
+    participations = Participation.objects.filter(end_date__lt=now, is_cron_checked=is_cron_checked)
+    return participations
