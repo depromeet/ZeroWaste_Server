@@ -50,10 +50,6 @@ class MissionSerializer(serializers.ModelSerializer):
         value['creater'] = UserSerializer(creater).data['data']
         value['theme'] = instance.theme
         value['banner_img_urls'] = instance.banner_img_urls
-        user_in_progress_counts = get_number_of_participation_by_mission(instance, status=Participation.Status.READY).count() + get_number_of_participation_by_mission(instance, status=Participation.Status.PARTICIPATED).count()
-        value['successful_user_counts'] = get_number_of_participation_by_mission(instance).count()
-        value['user_in_progress_counts'] = user_in_progress_counts
-        value['likes_counts'] = get_liked_missions_counts_by_missions(instance)
 
         request = self.context.get("request")
         if request and not request.user.is_anonymous:
