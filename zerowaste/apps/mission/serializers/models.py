@@ -20,7 +20,7 @@ class MissionSerializer(serializers.ModelSerializer):
         model = Mission
         fields = (
         'id', 'name', 'owner', 'place', 'theme', "difficulty", "banner_img_urls", "content",
-        'sentence_for_cheer', 'signed_url_num')
+        'sentence_for_cheer', 'signed_url_num', 'likes_count', 'successful_count', 'in_progress_count')
 
     def validate(self, data):
         place = self.initial_data.get('place', None)
