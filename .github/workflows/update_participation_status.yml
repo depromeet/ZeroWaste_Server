@@ -10,4 +10,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: cURL request
-        run: curl -X POST http://woozoo.beautyvillage.net/api/batch/participations -H 'Authorization: ${{ secrets.ZERO_WASTE_BATCH_KEY }}'
+        run: curl -X POST http://woozoo.beautyvillage.net/api/batch/participations -h {'Authorization':${{ secrets.ZERO_WASTE_BATCH_KEY }}}
