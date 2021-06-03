@@ -170,9 +170,9 @@ class MissionViewSet(viewsets.GenericViewSet,
         if ordering == "recent":
             return mission_querysets.order_by('-created_at')
         elif ordering == "popularity":
-            mission_querysets = Mission.objects.annotate(count=Count("like_mission")).order_by('-count', '-created_at')
+            return mission_querysets.order_by('-likes_count', '-created_at')
         elif ordering == "participation":
-            mission_querysets = Mission.objects.annotate(count=Count("participated_mission")).order_by('-count', '-created_at')
+            return mission_querysets.order_by('-successful_count', '-in_progress_count', '-created_at')
         return mission_querysets
 
     def get_permissions(self):
