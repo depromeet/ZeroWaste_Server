@@ -8,6 +8,10 @@ class MissionLike(models.Model):
     owner = models.ForeignKey("user.User", related_name="mission_like_user", on_delete=models.CASCADE,
                                 db_column="owner")
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.mission.update_likes_count()
+
 
 class CertificationLiker(models.Model):
     id = models.BigAutoField(primary_key=True)

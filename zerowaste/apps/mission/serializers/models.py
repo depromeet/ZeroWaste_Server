@@ -5,7 +5,7 @@ from apps.mission.models.certification import Certification
 from apps.mission.models.participation import Participation
 from apps.mission.models.likes import MissionLike
 from apps.mission.services.models import get_participation_by_mission_and_owner, \
-    is_user_liked_mission
+    is_user_liked_mission, get_number_of_participation_by_mission, get_liked_missions_counts_by_missions
 from apps.core.utils.response import build_response_body
 from apps.user.services.models import get_user_by_id
 from apps.user.serializers.models import UserSerializer
@@ -20,7 +20,7 @@ class MissionSerializer(serializers.ModelSerializer):
         model = Mission
         fields = (
         'id', 'name', 'owner', 'place', 'theme', "difficulty", "banner_img_urls", "content",
-        'sentence_for_cheer', 'signed_url_num')
+        'sentence_for_cheer', 'signed_url_num', 'likes_count', 'successful_count', 'in_progress_count')
 
     def validate(self, data):
         place = self.initial_data.get('place', None)
