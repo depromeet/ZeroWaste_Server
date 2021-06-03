@@ -1,14 +1,16 @@
 from rest_framework import viewsets, mixins, permissions, status
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.response import Response
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from django.utils.decorators import method_decorator
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Count
 
 from apps.core import permissions as custom_permission
+from apps.mission.authentication import BatchAuthentication
 from apps.mission.serializers.models import MissionSerializer
 from apps.mission.models.mission import Mission
-from apps.mission.models.participation import Participation
+from apps.mission.services import cron_job
 from apps.mission.services.missions import separate_url_to_signed_public
 from apps.mission.services.models import create_mission
 from apps.core import constants, exceptions
@@ -205,3 +207,11 @@ class MissionViewSet(viewsets.GenericViewSet,
             return Response(data=build_response_body(response.data), status=status.HTTP_200_OK)
         except Exception:
             raise exceptions.InternalServerError()
+
+
+@api_view(['POST'])
+@authentication_classes([BatchAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def update_participation_status(request):
+    cron_job.update_participation_status()
+    return Response(status=status.HTTP_202_ACCEPTED)

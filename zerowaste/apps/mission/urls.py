@@ -11,4 +11,5 @@ urlpatterns = [
     path('', include(router.urls)),
     path('missions/<int:mission_id>/like', likes.MissionLikeViewSet.as_view({'post': 'create'})),
     path('missions/<int:mission_id>/dislike', likes.MissionLikeViewSet.as_view({'delete': 'destroy'}))
+    path('batch/participations', missions.update_participation_status)
 ]
