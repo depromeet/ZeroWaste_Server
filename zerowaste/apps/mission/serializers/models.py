@@ -4,8 +4,7 @@ from apps.mission.models.mission import Mission
 from apps.mission.models.certification import Certification
 from apps.mission.models.participation import Participation
 from apps.mission.models.likes import MissionLike
-from apps.mission.services.models import get_participation_by_mission_and_owner, \
-    is_user_liked_mission
+from apps.mission.services.models import get_participation_by_mission_and_owner, is_user_liked_mission, check_overlimit_certifications
 from apps.core.utils.response import build_response_body
 from apps.user.services.models import get_user_by_id
 from apps.user.serializers.models import UserSerializer
@@ -85,13 +84,29 @@ class MissionLikeSerializer(serializers.BaseSerializer):
 
 
 class CertificationSerializer(serializers.ModelSerializer):
-    mission_id = ParticipationSerializer(read_only=True)
-
+    signed_url_num = serializers.IntegerField(required=False)
     class Meta:
         model = Certification
-        fields = ('id', 'name', 'owner', 'mission_id', "image", "content", 'isPublic')
+        fields = ('id', 'name', 'owner', 'mission_id', "img_urls", "content", 'isPublic', 'percieved_difficulty',
+                  'signed_url_num')
 
-    def validate(self, attrs):
+
+    def validate(self, data):
+        content = self.initial_data.get('content', None)
+        if len(content) < 10:
+            raise ValidationError(f'Contents must be at least 10 character.')
+
+        percieved_difficulty = self.initial_data.get('percieved_difficulty', None)
+        if percieved_difficulty and not percieved_difficulty in Certification.Percieved_difficulty:
+            raise ValidationError(f'{self.initial_data["percieved_difficulty"]} is not in {Certification.Percieved_difficulty.choices}')
+
+        user = self.initial_data.get('user', None)
+        mission_id = self.initial_data.get('mission_id', None)
+        if check_overlimit_certifications(user, mission_id)==False:
+            raise ValidationError(f'You already participated this mission. Please find another mission.')
+
+        #TODO: 이미 존재하는 인증을 수정하려고 할 때(patch), 후기 외에는 수정할 수 없다
+
         return self.initial_data
 
     def to_internal_value(self, data):
@@ -99,9 +114,8 @@ class CertificationSerializer(serializers.ModelSerializer):
         if request and hasattr(request, "user"):
             self.initial_data['owner'] = request.user
 
-    # TODO: ?? certification에서는 creater로 키를 바꾸기보다, 그냥 owner 정보로 보여져도 될거같은데요?
+    # TODO: ?? certification에서는 creater로 키를 바꾸기보다, 그냥 owner 정보로 보여져도 될거같은데요? -> ???
     def to_representation(self, instance):
         value = super(CertificationSerializer, self).to_representation(instance)
-        creater = get_user_by_id(value['owner'])
-        value['creater'] = UserSerializer(creater).data['data']
         return build_response_body(data=value)
+
