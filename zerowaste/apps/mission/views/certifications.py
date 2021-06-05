@@ -7,7 +7,7 @@ from apps.core import permissions as custom_permission
 from apps.mission.serializers.models import CertificationSerializer
 from apps.user.serializers.models import UserSerializer
 from apps.mission.services.missions import separate_url_to_signed_public
-from apps.mission.services.models import create_certification, get_mission_by_id, update_participation_by_certification, update_participation_status_by_period, get_certifications_by_mission_id
+from apps.mission.services.models import create_certification, get_mission_by_id, update_participation_by_certification, update_participation_status_by_period, get_certifications_by_mission_id, get_certifications_by_mission_id_and_owner
 from apps.mission.models.certification import Certification
 from apps.core.utils.response import build_response_body
 from apps.core.utils.tools import to_dict
@@ -40,7 +40,7 @@ from apps.core import constants
 @method_decorator(name='retrieve',
     decorator=swagger_auto_schema(
         tags=['certifications'],
-        operation_description="미션 인증 목록을 조회합니다2.",
+        operation_description="사용자별 미션 인증 목록을 조회합니다.",
         manual_parameters=[
             openapi.Parameter(
                 'Authorization', openapi.IN_HEADER,
@@ -127,6 +127,9 @@ class CertificationViewSet(viewsets.GenericViewSet,
     queryset = Certification.objects
     serializer_class = CertificationSerializer
 
+    def get_queryset(self):
+        return super().get_queryset().filter(is_public=True)
+
     def get_permissions(self):
         if self.request.method == 'POST':
             self.permission_classes = [permissions.AllowAny]
@@ -134,15 +137,27 @@ class CertificationViewSet(viewsets.GenericViewSet,
             self.permission_classes = [custom_permission.IsOwnerOrReadOnly]
         return super(CertificationViewSet, self).get_permissions()
 
-    # TODO: certification mission_id에 따라 목록 조회하는 함수 -> mission 조회 함수 swagger로 확인해보기
     def list(self, request, mission_id):
-        certification = get_certifications_by_mission_id(mission_id) # keyerror
-        return Response(build_response_body(data=to_dict(certification)), status=status.HTTP_200_OK)
+        certification = get_certifications_by_mission_id(mission_id)
 
+        if certification is not None:
+            serializer = self.get_serializer(certification, many=True)
+            return Response(build_response_body(data=serializer.data), status=status.HTTP_200_OK)
 
-    #TODO: participation 객체 생성 여부 체크 및 state -> progress로 업데이트
+    def retrieve(self, request, mission_id, pk):
+        certification = get_certifications_by_mission_id_and_owner(mission_id=mission_id, owner=pk)
+
+        if certification is not None:
+            serializer = self.get_serializer(certification, many=True)
+            return Response(build_response_body(data=serializer.data), status=status.HTTP_200_OK)
+
+    #TODO: certification 생성 시 user가 변화하지 않음
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
+        print(serializer)
+        print('request:', request)
+        print(request.user)
+
         if serializer.is_valid():
             signed_url_num = request.data.get('signed_url_num', 0)
             signed_url_list, public_url_list = separate_url_to_signed_public(signed_url_num, request.user)
@@ -153,13 +168,14 @@ class CertificationViewSet(viewsets.GenericViewSet,
 
             result = serializer.validated_data
             result['signed_url_list'] = signed_url_list
+
             # TODO : 단순히 user id만 나오도록 하기
             result['owner'] = UserSerializer(result['owner']).data['data']
 
             return Response(data=build_response_body(result), status=status.HTTP_200_OK)
 
-
     # def partial_update(self, request, mission_id):
+    # return
 
 
 

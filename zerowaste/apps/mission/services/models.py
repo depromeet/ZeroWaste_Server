@@ -3,7 +3,8 @@ from apps.mission.models.participation import Participation
 from apps.mission.models.likes import MissionLike
 from apps.mission.models.certification import Certification
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+import pytz
 
 _UNIT_DAY_BY_DIFFICULTY = {
     'very_easy': 1,
@@ -95,10 +96,17 @@ def get_certifications_by_mission_id(mission_id):
     certification = Certification.objects.filter(mission_id=mission_id)
     return certification
 
+def get_certifications_by_mission_id_and_owner(mission_id, owner):
+    try:
+        certification = Certification.objects.filter(mission_id=mission_id, owner=owner)
+        return certification
+    except Certification.DoesNotExist:
+        return None
 
-# TODO : 인증 객체가 생기면 participation.status를 SUCCESS로 바꿈, user complete mission count, user participation count 갱신
+
+# TODO : 인증 객체가 생기면 participation.status를 PARTICIPATED로 바꿈, user complete mission count, user participation count 갱신
 def update_participation_by_certification(owner, mission_id):
-    participation = get_participation_by_mission_and_owner(owner, mission_id)
+    participation = get_participation_by_mission_and_owner(owner=owner, mission=mission_id)
     participation.status = Participation.Status.PARTICIPATED
     participation.save()
 
@@ -106,9 +114,12 @@ def update_participation_by_certification(owner, mission_id):
 
 # TODO : 기한 내에 인증 객체가 생기지 않았을 경우 participation.status를 FAILURE로 변경, READY로 다시 변경?
 def update_participation_status_by_period(owner, mission_id):
-    participation = get_participation_by_mission_and_owner(owner, mission_id)
-    end_date= Participation.end_date
-    now_date = datetime.now()
+    participation = get_participation_by_mission_and_owner(owner=owner, mission=mission_id)
+
+    KST = pytz.timezone('Asia/Seoul')
+    end_date = participation.end_date
+    now_date = datetime.now().replace(tzinfo=KST)
+
     if now_date > end_date:
         participation.status = Participation.Status.FAILURE
         participation.save()
@@ -121,15 +132,15 @@ def update_participation_status_by_period(owner, mission_id):
 
 
 def check_overlimit_certifications(owner, mission_id):
-    participation = Participation.objects.get(owner=owner, status=Participation.Status.PARTICIPATED)
-    if participation is True:
-        return False
-    else:
-        return True
+    try:
+        participation = Participation.objects.get(owner=owner, mission=mission_id, status=Participation.Status.PARTICIPATED)
+        if participation is True:
+            return False
+    except Participation.DoesNotExist:
+        return None
 
 # TODO : 랭킹 기준으로 TOP 3
 # def get_top3_ranker_user(owner, mission_id):
 #     return
 
-# 날짜 확인
-# 재도전 시점? => 실패 status가 언제 ready로 바뀌게 되는가?
+

@@ -102,6 +102,7 @@ class CertificationSerializer(serializers.ModelSerializer):
 
         user = self.initial_data.get('user', None)
         mission_id = self.initial_data.get('mission_id', None)
+
         if check_overlimit_certifications(user, mission_id)==False:
             raise ValidationError(f'You already participated this mission. Please find another mission.')
 
@@ -113,6 +114,7 @@ class CertificationSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         if request and hasattr(request, "user"):
             self.initial_data['owner'] = request.user
+
 
     # TODO: ?? certification에서는 creater로 키를 바꾸기보다, 그냥 owner 정보로 보여져도 될거같은데요? -> ???
     def to_representation(self, instance):
