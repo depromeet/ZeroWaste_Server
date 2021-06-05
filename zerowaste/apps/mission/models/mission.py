@@ -32,8 +32,12 @@ class Mission(SoftDeleteModelBase):
         default=['refuse', 'reduce', 'reuse', 'recycle', 'rot']
     )
     difficulty = models.CharField('difficulty', max_length=10, choices=Difficulty.choices, default=Difficulty.VERY_EASY)
-    logo_img_url = models.CharField(max_length=200)
-    icon_img_url = models.CharField(max_length=200)
+    banner_img_urls = ListCharField(
+        base_field=models.URLField(max_length=150),
+        size=3,
+        max_length=(3 * 151),
+        default=[]
+    )
     content = models.CharField(max_length=1000)
     is_public = models.BooleanField(default=True)
     sentence_for_cheer = models.CharField(max_length=50, default="")

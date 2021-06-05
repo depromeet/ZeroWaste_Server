@@ -44,3 +44,34 @@ class KakaoLoginAPIView(views.APIView):
             result['is_new_user'] = is_new_user
             return Response(build_response_body(result), status=status.HTTP_200_OK)
         raise exceptions.ValidationError()
+
+
+class AppleLoginAPIView(views.APIView):
+    permission_classes = [permissions.AllowAny]
+
+    @swagger_auto_schema(
+        operation_description="애플 로그인 시 토큰 등록 및 익명 유저생성",
+        request_body=social_login.AppleLoginSerializer,
+    )
+    def post(self, request, *args, **kwargs):
+        serializer = social_login.AppleLoginSerializer(data=request.data)
+        if serializer.is_valid():
+            identifier = serializer.validated_data['identifier']
+            email = serializer.validated_data.get('email', None)
+            logging.debug(f'apple identifier : {identifier}')
+
+            try:
+                is_new_user = False
+                auth = get_auth_by_identifier_with_login_type(identifier=identifier, login_type=Auth.LoginType.Apple)
+
+            except Auth.DoesNotExist:
+                anonymous_user = create_anonymous_user()
+                auth = create_auth(identifier=identifier, email=email, user=anonymous_user, social_token=identifier, login_type=Auth.LoginType.Apple)
+                is_new_user = True
+
+            auth = record_user_token(auth)
+            auth_serializer = models.AuthSerializer(auth)
+            result = auth_serializer.data
+            result['is_new_user'] = is_new_user
+            return Response(build_response_body(result), status=status.HTTP_200_OK)
+        raise exceptions.ValidationError()
