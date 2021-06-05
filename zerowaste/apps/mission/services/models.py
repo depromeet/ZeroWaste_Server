@@ -106,11 +106,13 @@ def get_certifications_by_mission_id_and_owner(mission_id, owner):
 
 # TODO : 인증 객체가 생기면 participation.status를 PARTICIPATED로 바꿈, user complete mission count, user participation count 갱신
 def update_participation_by_certification(owner, mission_id):
-    participation = get_participation_by_mission_and_owner(owner=owner, mission=mission_id)
-    participation.status = Participation.Status.PARTICIPATED
-    participation.save()
-
-    return participation
+    try:
+        participation = get_participation_by_mission_and_owner(owner=owner, mission=mission_id)
+        participation.status = Participation.Status.PARTICIPATED
+        participation.save()
+        return participation
+    except AttributeError:
+        return None
 
 # TODO : 기한 내에 인증 객체가 생기지 않았을 경우 participation.status를 FAILURE로 변경, READY로 다시 변경?
 def update_participation_status_by_period(owner, mission_id):

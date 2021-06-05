@@ -154,9 +154,6 @@ class CertificationViewSet(viewsets.GenericViewSet,
     #TODO: certification 생성 시 user가 변화하지 않음
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        print(serializer)
-        print('request:', request)
-        print(request.user)
 
         if serializer.is_valid():
             signed_url_num = request.data.get('signed_url_num', 0)
