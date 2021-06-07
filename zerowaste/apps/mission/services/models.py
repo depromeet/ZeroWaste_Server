@@ -1,7 +1,10 @@
 from apps.mission.models.mission import Mission
 from apps.mission.models.participation import Participation
 from apps.mission.models.likes import MissionLike
+from apps.mission.models.certification import Certification
 
+from datetime import datetime, timedelta
+import pytz
 from datetime import timedelta, datetime
 from django.utils.timezone import now
 
@@ -84,6 +87,64 @@ def is_user_liked_mission(mission, user):
 def get_liked_missions_by_owner(owner):
     liked_missions = MissionLike.objects.filter(owner=owner)
     return liked_missions
+
+
+def create_certification(certification_data, owner, mission_id, public_url_list):
+    certification = Certification(name=certification_data['name'],
+                                  mission_id=get_mission_by_id(mission_id),
+                                  owner=owner,
+                                  content=certification_data.get('content', ''),
+                                  img_urls=public_url_list,
+                                  percieved_difficulty=certification_data['percieved_difficulty'])
+    certification.save()
+    return certification
+
+def get_certification_by_mission_id(mission_id):
+    certification = Certification.objects.filter(mission_id=mission_id)
+    return certification
+
+def get_certification_by_mission_and_id(mission_id, id):
+    certification = Certification.objects.get(mission_id=mission_id, id=id)
+    return certification
+
+def get_certifications_by_mission_id_and_owner(mission_id, owner):
+    try:
+        certification = Certification.objects.filter(mission_id=mission_id, owner=owner)
+        return certification
+    except Certification.DoesNotExist:
+        return None
+
+
+def update_participation_by_certification(owner, mission_id):
+    try:
+        participation = get_participation_by_mission_and_owner(owner=owner, mission=mission_id)
+        participation.status = Participation.Status.SUCCESS
+        participation.save()
+        return participation
+    except AttributeError:
+        return None
+
+
+def check_overlimit_certifications(owner, mission_id):
+    try:
+        participation = Participation.objects.get(owner=owner, mission=mission_id, status=Participation.Status.SUCCESS)
+        if participation is True:
+            return False
+    except Participation.DoesNotExist:
+        return None
+
+def check_mission_due_date(now_date, mission_id, owner):
+    kst = pytz.timezone('Asia/Seoul')
+    participation = get_participation_by_mission_and_owner(mission_id, owner)
+    due_date = participation.end_date
+    if now_date.replace(tzinfo=kst) < due_date.replace(tzinfo=kst):
+        participation.status = Participation.Status.FAILURE
+        participation.save()
+
+
+# TODO : 랭킹 기준으로 TOP 3
+# def get_top3_ranker_user(owner, mission_id):
+#     return
 
 
 def get_liked_missions_counts_by_missions(mission):
