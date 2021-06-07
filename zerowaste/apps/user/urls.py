@@ -7,6 +7,7 @@ from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
 router.register(r'users', users.UserViewSet)
 router.register(r'blocklist', blocklist.BlockListViewSet)
+router.register(r'bazzis', bazzi.BazziListViewSet)
 
 admin_router = DefaultRouter()
 admin_router.register(r'bazzi', bazzi.BazziViewSet)

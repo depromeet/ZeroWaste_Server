@@ -19,7 +19,7 @@ class MissionSerializer(serializers.ModelSerializer):
         model = Mission
         fields = (
         'id', 'name', 'owner', 'place', 'theme', "difficulty", "banner_img_urls", "content",
-        'sentence_for_cheer', 'signed_url_num')
+        'sentence_for_cheer', 'signed_url_num', 'likes_count', 'successful_count', 'in_progress_count')
 
     def validate(self, data):
         place = self.initial_data.get('place', None)
@@ -48,6 +48,7 @@ class MissionSerializer(serializers.ModelSerializer):
         creater = get_user_by_id(value['owner'])
         value['creater'] = UserSerializer(creater).data['data']
         value['theme'] = instance.theme
+        value['banner_img_urls'] = instance.banner_img_urls
 
         request = self.context.get("request")
         if request and not request.user.is_anonymous:
@@ -57,6 +58,11 @@ class MissionSerializer(serializers.ModelSerializer):
             else:
                 value['participation'] = {'status': 'none'}
             value['is_liked'] = is_user_liked_mission(instance, request.user)
+
+        if request:
+            pk = request.parser_context['kwargs'].get('pk', None)
+            if not pk: # (hasattr(self, 'action') and self.action == 'list')
+                return value
         return build_response_body(data=value)
 
 

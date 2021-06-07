@@ -5,6 +5,8 @@ from apps.mission.models.certification import Certification
 
 from datetime import datetime, timedelta
 import pytz
+from datetime import timedelta, datetime
+from django.utils.timezone import now
 
 _UNIT_DAY_BY_DIFFICULTY = {
     'very_easy': 1,
@@ -37,7 +39,7 @@ def get_participation_by_mission_and_owner(mission, owner):
 
 
 def get_participation_period(difficulty):
-    now_date = datetime.now()
+    now_date = now
     end_date = now_date + timedelta(days=_UNIT_DAY_BY_DIFFICULTY[difficulty])
     return now_date, end_date
 
@@ -69,6 +71,11 @@ def update_participation_status(participation_id, mission, status):
 
 def get_participations_by_owner(owner, status=Participation.Status.SUCCESS):
     participations = Participation.objects.filter(owner=owner, status=status)
+    return participations
+
+
+def get_number_of_participation_by_mission(mission, status=Participation.Status.SUCCESS):
+    participations = Participation.objects.filter(mission=mission, status=status)
     return participations
 
 
@@ -140,3 +147,12 @@ def check_mission_due_date(now_date, mission_id, owner):
 #     return
 
 
+def get_liked_missions_counts_by_missions(mission):
+    result = MissionLike.objects.filter(mission=mission).count()
+    return result
+
+
+def get_participations_after_end_date(status=Participation.Status.READY, is_cron_checked=False):
+    now = datetime.now()
+    participations = Participation.objects.filter(end_date__lt=now, is_cron_checked=is_cron_checked)
+    return participations

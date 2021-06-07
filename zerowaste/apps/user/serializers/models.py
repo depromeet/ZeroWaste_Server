@@ -7,6 +7,7 @@ from apps.mission.models.participation import Participation
 from apps.user.models.blocklist import BlockList
 from apps.core.utils.response import build_response_body
 from apps.mission.services.models import get_participations_by_owner, get_liked_missions_by_owner
+from apps.user.services.models import get_user_bazzi_by_user_and_bazzi
 
 
 class AuthSerializer(serializers.ModelSerializer):
@@ -22,9 +23,16 @@ class UserSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         value = super(UserSerializer, self).to_representation(instance)
+        # TODO: len으로 세지말고, 조회 함수를 count로 사용하기 https://velog.io/@may_soouu/Django-%EB%A9%94%EC%86%8C%EB%93%9C-%EC%A0%95%EB%A6%AC
         value['completed_mission_counts'] = len(get_participations_by_owner(instance))
         value['progressing_mission_counts'] = len(get_participations_by_owner(instance, status=Participation.Status.READY))
         value['liked_mission_counts'] = len(get_liked_missions_by_owner(instance))
+
+        request = self.context.get("request")
+        if request:
+            pk = request.parser_context['kwargs'].get('pk', None)
+            if not pk: # (hasattr(self, 'action') and self.action == 'list')
+                return value
         return build_response_body(data=value)
 
 
@@ -38,3 +46,20 @@ class BazziSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bazzi
         fields = '__all__'
+
+    def to_representation(self, instance):
+        value = super(BazziSerializer, self).to_representation(instance)
+
+        request = self.context.get("request")
+        if request and not request.user.is_anonymous:
+            bazzi = get_user_bazzi_by_user_and_bazzi(instance, request.user)
+            if bazzi:
+                value['is_owned'] = True
+            else:
+                value['is_owned'] = False
+
+        if request:
+            pk = request.parser_context['kwargs'].get('pk', None)
+            if not pk: # (hasattr(self, 'action') and self.action == 'list')
+                return value
+        return build_response_body(data=value)

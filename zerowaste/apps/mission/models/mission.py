@@ -1,6 +1,8 @@
 from apps.core.models.soft_delete_model_base import SoftDeleteModelBase
 from django.db import models
 from django_mysql.models import ListCharField
+from apps.mission.models.likes import MissionLike
+from apps.mission.models.participation import Participation
 
 
 class Mission(SoftDeleteModelBase):
@@ -42,3 +44,19 @@ class Mission(SoftDeleteModelBase):
     is_public = models.BooleanField(default=True)
     sentence_for_cheer = models.CharField(max_length=50, default="")
 
+    likes_count = models.IntegerField(default=0)
+    successful_count = models.IntegerField(default=0)
+    in_progress_count = models.IntegerField(default=0)
+
+    def update_likes_count(self):
+        self.likes_count = MissionLike.objects.filter(mission=self).count()
+        self.save()
+
+    def update_successful_count(self):
+        self.successful_count = Participation.objects.filter(mission=self, status=Participation.Status.SUCCESS).count()
+        self.save()
+
+    def update_in_progress_count(self):
+        user_in_progress_counts = Participation.objects.filter(mission=self, status=Participation.Status.READY).count()
+        self.in_progress_count = user_in_progress_counts
+        self.save()

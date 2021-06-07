@@ -69,3 +69,9 @@ class SoftDeleteError(CoreException):
     status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
     default_detail = _('Soft delete error.')
     default_code = errno.SOFT_DELETE_ERROR
+
+
+class BatchProcessError(CoreException):
+    status = status.HTTP_500_INTERNAL_SERVER_ERROR
+    default_detail = _('Batch Process occurs error')
+    default_code = errno.BATCH_PROCESS_ERROR
