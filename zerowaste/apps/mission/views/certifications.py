@@ -7,10 +7,10 @@ from apps.core import permissions as custom_permission
 from apps.mission.serializers.models import CertificationSerializer
 from apps.user.serializers.models import UserSerializer
 from apps.mission.services.missions import separate_url_to_signed_public
-from apps.mission.services.models import create_certification, get_mission_by_id, update_participation_by_certification, update_participation_status_by_period, get_certifications_by_mission_id, get_certifications_by_mission_id_and_owner
+from apps.mission.services.models import create_certification, get_mission_by_id, update_participation_by_certification, get_certification_by_mission_id, get_certification_by_mission_and_id
 from apps.mission.models.certification import Certification
 from apps.core.utils.response import build_response_body
-from apps.core.utils.tools import to_dict
+from datetime import datetime
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -20,7 +20,7 @@ from apps.core import constants
 @method_decorator(name='list',
     decorator=swagger_auto_schema(
         tags=['certifications'],
-        operation_description="미션 인증 목록을 조회합니다.",
+        operation_description="미션별 인증한 후기 목록을 조회합니다.",
         manual_parameters=[
             openapi.Parameter(
                 'Authorization', openapi.IN_HEADER,
@@ -40,7 +40,7 @@ from apps.core import constants
 @method_decorator(name='retrieve',
     decorator=swagger_auto_schema(
         tags=['certifications'],
-        operation_description="사용자별 미션 인증 목록을 조회합니다.",
+        operation_description="각 미션과 cetification id를 필터로 인증 목록을 조회합니다.",
         manual_parameters=[
             openapi.Parameter(
                 'Authorization', openapi.IN_HEADER,
@@ -138,30 +138,35 @@ class CertificationViewSet(viewsets.GenericViewSet,
         return super(CertificationViewSet, self).get_permissions()
 
     def list(self, request, mission_id):
-        certification = get_certifications_by_mission_id(mission_id)
+        certification = get_certification_by_mission_id(mission_id)
 
         if certification is not None:
             serializer = self.get_serializer(certification, many=True)
             return Response(build_response_body(data=serializer.data), status=status.HTTP_200_OK)
 
     def retrieve(self, request, mission_id, pk):
-        certification = get_certifications_by_mission_id_and_owner(mission_id=mission_id, owner=pk)
+        certification = get_certification_by_mission_and_id(mission_id=mission_id, id=pk)
 
         if certification is not None:
-            serializer = self.get_serializer(certification, many=True)
+            serializer = self.get_serializer(certification)
             return Response(build_response_body(data=serializer.data), status=status.HTTP_200_OK)
 
-    #TODO: certification 생성 시 user가 변화하지 않음
-    def create(self, request, *args, **kwargs):
+
+    def create(self, request, mission_id, *args, **kwargs):
+        print(mission_id)
         serializer = self.get_serializer(data=request.data)
 
         if serializer.is_valid():
+            # TODO: 인증 기간 내에 존재하는지 확인(FAILURE or NOT)
+            # TODO: img_url list 형태로 보내기
+            # TODO : Failure인지 확인하는 함수 만들어야 함.
+            now_time = datetime.now()
+
             signed_url_num = request.data.get('signed_url_num', 0)
             signed_url_list, public_url_list = separate_url_to_signed_public(signed_url_num, request.user)
-            create_certification(serializer.validated_data, request.user, public_url_list)
+            create_certification(serializer.validated_data, request.user, mission_id, public_url_list)
 
-            update_participation_by_certification(request.user, request.data['mission_id'])
-            update_participation_status_by_period(request.user, request.data['mission_id'])
+            update_participation_by_certification(request.user, mission_id)
 
             result = serializer.validated_data
             result['signed_url_list'] = signed_url_list

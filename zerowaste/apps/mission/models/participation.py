@@ -6,7 +6,6 @@ class Participation(ModelBase):
     class Status(models.TextChoices):
         READY = 'ready'
         PARTICIPATED = 'participated'
-        #TODO: end_date가 지나면, ready나 participated 값보고 상태 업데이트 치기
         SUCCESS = 'success'
         FAILURE = 'failure'
 

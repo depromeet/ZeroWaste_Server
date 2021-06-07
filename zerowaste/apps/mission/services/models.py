@@ -82,9 +82,9 @@ def get_liked_missions_by_owner(owner):
     return liked_missions
 
 
-def create_certification(certification_data, owner, public_url_list):
+def create_certification(certification_data, owner, mission_id, public_url_list):
     certification = Certification(name=certification_data['name'],
-                                  mission_id=Mission.objects.get(id=certification_data['mission_id']),
+                                  mission_id=get_mission_by_id(mission_id),
                                   owner=owner,
                                   content=certification_data.get('content', ''),
                                   img_urls=public_url_list,
@@ -92,8 +92,12 @@ def create_certification(certification_data, owner, public_url_list):
     certification.save()
     return certification
 
-def get_certifications_by_mission_id(mission_id):
+def get_certification_by_mission_id(mission_id):
     certification = Certification.objects.filter(mission_id=mission_id)
+    return certification
+
+def get_certification_by_mission_and_id(mission_id, id):
+    certification = Certification.objects.get(mission_id=mission_id, id=id)
     return certification
 
 def get_certifications_by_mission_id_and_owner(mission_id, owner):
@@ -104,33 +108,14 @@ def get_certifications_by_mission_id_and_owner(mission_id, owner):
         return None
 
 
-# TODO : 인증 객체가 생기면 participation.status를 PARTICIPATED로 바꿈, user complete mission count, user participation count 갱신
 def update_participation_by_certification(owner, mission_id):
     try:
         participation = get_participation_by_mission_and_owner(owner=owner, mission=mission_id)
-        participation.status = Participation.Status.PARTICIPATED
+        participation.status = Participation.Status.SUCCESS
         participation.save()
         return participation
     except AttributeError:
         return None
-
-# TODO : 기한 내에 인증 객체가 생기지 않았을 경우 participation.status를 FAILURE로 변경, READY로 다시 변경?
-def update_participation_status_by_period(owner, mission_id):
-    participation = get_participation_by_mission_and_owner(owner=owner, mission=mission_id)
-
-    KST = pytz.timezone('Asia/Seoul')
-    end_date = participation.end_date
-    now_date = datetime.now().replace(tzinfo=KST)
-
-    if now_date > end_date:
-        participation.status = Participation.Status.FAILURE
-        participation.save()
-
-    else:
-        participation.status = Participation.Status.SUCCESS
-        participation.save()
-
-    return participation
 
 
 def check_overlimit_certifications(owner, mission_id):
