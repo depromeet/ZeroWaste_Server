@@ -7,6 +7,7 @@ from apps.mission.models.participation import Participation
 from apps.user.models.blocklist import BlockList
 from apps.core.utils.response import build_response_body
 from apps.mission.services.models import get_participations_by_owner, get_liked_missions_by_owner
+from apps.user.services.models import get_user_bazzi_by_user_and_bazzi
 
 
 class AuthSerializer(serializers.ModelSerializer):
@@ -45,3 +46,20 @@ class BazziSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bazzi
         fields = '__all__'
+
+    def to_representation(self, instance):
+        value = super(BazziSerializer, self).to_representation(instance)
+
+        request = self.context.get("request")
+        if request and not request.user.is_anonymous:
+            bazzi = get_user_bazzi_by_user_and_bazzi(instance, request.user)
+            if bazzi:
+                value['is_owned'] = True
+            else:
+                value['is_owned'] = False
+
+        if request:
+            pk = request.parser_context['kwargs'].get('pk', None)
+            if not pk: # (hasattr(self, 'action') and self.action == 'list')
+                return value
+        return build_response_body(data=value)
