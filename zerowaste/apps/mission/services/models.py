@@ -3,7 +3,7 @@ from apps.mission.models.participation import Participation
 from apps.mission.models.likes import MissionLike
 from apps.mission.models.certification import Certification
 
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 import pytz
 
 _UNIT_DAY_BY_DIFFICULTY = {
@@ -120,11 +120,20 @@ def update_participation_by_certification(owner, mission_id):
 
 def check_overlimit_certifications(owner, mission_id):
     try:
-        participation = Participation.objects.get(owner=owner, mission=mission_id, status=Participation.Status.PARTICIPATED)
+        participation = Participation.objects.get(owner=owner, mission=mission_id, status=Participation.Status.SUCCESS)
         if participation is True:
             return False
     except Participation.DoesNotExist:
         return None
+
+def check_mission_due_date(now_date, mission_id, owner):
+    kst = pytz.timezone('Asia/Seoul')
+    participation = get_participation_by_mission_and_owner(mission_id, owner)
+    due_date = participation.end_date
+    if now_date.replace(tzinfo=kst) < due_date.replace(tzinfo=kst):
+        participation.status = Participation.Status.FAILURE
+        participation.save()
+
 
 # TODO : 랭킹 기준으로 TOP 3
 # def get_top3_ranker_user(owner, mission_id):

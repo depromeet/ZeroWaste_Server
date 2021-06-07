@@ -106,6 +106,9 @@ class CertificationSerializer(serializers.ModelSerializer):
         if check_overlimit_certifications(user, mission_id)==False:
             raise ValidationError(f'You already participated this mission. Please find another mission.')
 
+        if get_participation_by_mission_and_owner(mission_id, user)==None:
+            raise ValidationError(f'Please participate the mission first.')
+
         #TODO: 이미 존재하는 인증을 수정하려고 할 때(patch), 후기 외에는 수정할 수 없다
 
         return self.initial_data
@@ -119,5 +122,6 @@ class CertificationSerializer(serializers.ModelSerializer):
     # TODO: ?? certification에서는 creater로 키를 바꾸기보다, 그냥 owner 정보로 보여져도 될거같은데요? -> ???
     def to_representation(self, instance):
         value = super(CertificationSerializer, self).to_representation(instance)
+        value['img_urls'] = instance.img_urls
         return build_response_body(data=value)
 

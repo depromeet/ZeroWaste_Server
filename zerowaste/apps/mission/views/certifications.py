@@ -7,7 +7,7 @@ from apps.core import permissions as custom_permission
 from apps.mission.serializers.models import CertificationSerializer
 from apps.user.serializers.models import UserSerializer
 from apps.mission.services.missions import separate_url_to_signed_public
-from apps.mission.services.models import create_certification, get_mission_by_id, update_participation_by_certification, get_certification_by_mission_id, get_certification_by_mission_and_id
+from apps.mission.services.models import create_certification, get_mission_by_id, update_participation_by_certification, get_certification_by_mission_id, get_certification_by_mission_and_id, check_mission_due_date
 from apps.mission.models.certification import Certification
 from apps.core.utils.response import build_response_body
 from datetime import datetime
@@ -153,14 +153,11 @@ class CertificationViewSet(viewsets.GenericViewSet,
 
 
     def create(self, request, mission_id, *args, **kwargs):
-        print(mission_id)
         serializer = self.get_serializer(data=request.data)
 
         if serializer.is_valid():
-            # TODO: 인증 기간 내에 존재하는지 확인(FAILURE or NOT)
-            # TODO: img_url list 형태로 보내기
-            # TODO : Failure인지 확인하는 함수 만들어야 함.
             now_time = datetime.now()
+            check_mission_due_date(now_time,mission_id,request.user)
 
             signed_url_num = request.data.get('signed_url_num', 0)
             signed_url_list, public_url_list = separate_url_to_signed_public(signed_url_num, request.user)

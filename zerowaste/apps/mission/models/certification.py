@@ -19,9 +19,9 @@ class Certification(SoftDeleteModelBase):
                                 db_column="owner")
     content = models.CharField(validators=[MinLengthValidator(10)], max_length=1500)
     img_urls = ListCharField(
-        base_field = models.URLField(max_length=150),
-        size = 3,
-        max_length =(3*151),
+        base_field=models.URLField(max_length=150),
+        size=3,
+        max_length=(3*151),
         default=[]
     )
     isPublic = models.BooleanField(default=True)
