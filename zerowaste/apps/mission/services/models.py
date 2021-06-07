@@ -2,7 +2,7 @@ from apps.mission.models.mission import Mission
 from apps.mission.models.participation import Participation
 from apps.mission.models.likes import MissionLike
 
-from datetime import timedelta
+from datetime import timedelta, datetime
 from django.utils.timezone import now
 
 _UNIT_DAY_BY_DIFFICULTY = {
