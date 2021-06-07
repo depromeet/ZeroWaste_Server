@@ -137,7 +137,7 @@ def check_mission_due_date(now_date, mission_id, owner):
     kst = pytz.timezone('Asia/Seoul')
     participation = get_participation_by_mission_and_owner(mission_id, owner)
     due_date = participation.end_date
-    if now_date.replace(tzinfo=kst) < due_date.replace(tzinfo=kst):
+    if now_date.replace(tzinfo=kst) > due_date.replace(tzinfo=kst):
         participation.status = Participation.Status.FAILURE
         participation.save()
 
