@@ -57,6 +57,6 @@ class Mission(SoftDeleteModelBase):
         self.save()
 
     def update_in_progress_count(self):
-        user_in_progress_counts = Participation.objects.filter(mission=self, status=Participation.Status.READY).count() + Participation.objects.filter(mission=self, status=Participation.Status.PARTICIPATED).count()
+        user_in_progress_counts = Participation.objects.filter(mission=self, status=Participation.Status.READY).count()
         self.in_progress_count = user_in_progress_counts
         self.save()

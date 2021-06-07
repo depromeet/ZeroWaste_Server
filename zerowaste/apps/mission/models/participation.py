@@ -5,7 +5,6 @@ from django.db import models
 class Participation(ModelBase):
     class Status(models.TextChoices):
         READY = 'ready'
-        PARTICIPATED = 'participated'
         SUCCESS = 'success'
         FAILURE = 'failure'
 
