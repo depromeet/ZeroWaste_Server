@@ -4,7 +4,7 @@ from apps.mission.models.mission import Mission
 from apps.mission.models.certification import Certification
 from apps.mission.models.participation import Participation
 from apps.mission.models.likes import MissionLike
-from apps.mission.services.models import get_participation_by_mission_and_owner, is_user_liked_mission, check_overlimit_certifications
+from apps.mission.services.models import get_participation_by_mission_and_owner, is_user_liked_mission, check_overlimit_certifications, get_certifications_by_mission_id_and_owner
 from apps.core.utils.response import build_response_body
 from apps.user.services.models import get_user_by_id
 from apps.user.serializers.models import UserSerializer
@@ -58,7 +58,7 @@ class MissionSerializer(serializers.ModelSerializer):
             else:
                 value['participation'] = {'status': 'none'}
             value['is_liked'] = is_user_liked_mission(instance, request.user)
-
+            value['user_certified_counts'] = get_certifications_by_mission_id_and_owner(mission_id=instance, owner=request.user).count()
         if request:
             pk = request.parser_context['kwargs'].get('pk', None)
             if not pk: # (hasattr(self, 'action') and self.action == 'list')
