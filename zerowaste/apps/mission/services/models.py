@@ -3,10 +3,9 @@ from apps.mission.models.participation import Participation
 from apps.mission.models.likes import MissionLike
 from apps.mission.models.certification import Certification
 
-from datetime import datetime, timedelta
 import pytz
-from datetime import timedelta, datetime
-from django.utils.timezone import now
+from datetime import datetime
+from django.utils import timezone
 
 _UNIT_DAY_BY_DIFFICULTY = {
     'very_easy': 1,
@@ -39,8 +38,8 @@ def get_participation_by_mission_and_owner(mission, owner):
 
 
 def get_participation_period(difficulty):
-    now_date = now
-    end_date = now_date + timedelta(days=_UNIT_DAY_BY_DIFFICULTY[difficulty])
+    now_date = timezone.now()
+    end_date = now_date + timezone.timedelta(days=_UNIT_DAY_BY_DIFFICULTY[difficulty])
     return now_date, end_date
 
 
