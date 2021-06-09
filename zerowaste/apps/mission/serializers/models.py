@@ -4,7 +4,7 @@ from apps.mission.models.mission import Mission
 from apps.mission.models.certification import Certification
 from apps.mission.models.participation import Participation
 from apps.mission.models.likes import MissionLike
-from apps.mission.services.models import get_participation_by_mission_and_owner, is_user_liked_mission, check_overlimit_certifications, get_certifications_by_mission_id_and_owner
+from apps.mission.services.models import get_participation_by_mission_and_owner, is_user_liked_mission, check_overlimit_certifications, get_certifications_by_mission_id_and_owner, get_mission_by_id
 from apps.core.utils.response import build_response_body
 from apps.user.services.models import get_user_by_id
 from apps.user.serializers.models import UserSerializer
@@ -106,13 +106,15 @@ class CertificationSerializer(serializers.ModelSerializer):
         if percieved_difficulty and not percieved_difficulty in Certification.Percieved_difficulty:
             raise ValidationError(f'{self.initial_data["percieved_difficulty"]} is not in {Certification.Percieved_difficulty.choices}')
 
-        user = self.initial_data.get('user', None)
-        mission_id = self.initial_data.get('mission_id', None)
+        request = self.context.get("request")
+        user = request.user
+        mission_id = request.parser_context['kwargs'].get('mission_id', None)
+        mission = get_mission_by_id(mission_id)
 
         if check_overlimit_certifications(user, mission_id)==False:
             raise ValidationError(f'You already participated this mission. Please find another mission.')
 
-        if get_participation_by_mission_and_owner(mission_id, user)==None:
+        if not get_participation_by_mission_and_owner(mission, user):
             raise ValidationError(f'Please participate the mission first.')
 
         #TODO: 이미 존재하는 인증을 수정하려고 할 때(patch), 후기 외에는 수정할 수 없다
