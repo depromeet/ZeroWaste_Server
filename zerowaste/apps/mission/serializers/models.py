@@ -49,14 +49,13 @@ class MissionSerializer(serializers.ModelSerializer):
         value['creater'] = UserSerializer(creater).data['data']
         value['theme'] = instance.theme
         value['banner_img_urls'] = instance.banner_img_urls
+        value['participation'] = {'status': 'none'}
 
         request = self.context.get("request")
         if request and not request.user.is_anonymous:
             participation = get_participation_by_mission_and_owner(instance, request.user)
             if participation:
                 value['participation'] = ParticipationSerializer(participation).data
-            else:
-                value['participation'] = {'status': 'none'}
             value['is_liked'] = is_user_liked_mission(instance, request.user)
             value['user_certified_counts'] = get_certifications_by_mission_id_and_owner(mission_id=instance, owner=request.user).count()
         if request:
