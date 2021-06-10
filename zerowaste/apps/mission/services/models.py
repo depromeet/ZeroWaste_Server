@@ -89,8 +89,7 @@ def get_liked_missions_by_owner(owner):
 
 
 def create_certification(certification_data, owner, mission_id, public_url_list):
-    certification = Certification(name=certification_data['name'],
-                                  mission_id=get_mission_by_id(mission_id),
+    certification = Certification(mission_id=get_mission_by_id(mission_id),
                                   owner=owner,
                                   content=certification_data.get('content', ''),
                                   img_urls=public_url_list,

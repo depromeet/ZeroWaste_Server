@@ -24,6 +24,6 @@ class Certification(SoftDeleteModelBase):
         max_length=(3*151),
         default=[]
     )
-    isPublic = models.BooleanField(default=True)
+    is_public = models.BooleanField(default=True)
     percieved_difficulty = models.CharField('percieved_difficulty', max_length=10,
                                             choices=Percieved_difficulty.choices, default="")

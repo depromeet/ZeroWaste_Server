@@ -3,7 +3,7 @@ from rest_framework import serializers
 from apps.mission.models.mission import Mission
 from apps.mission.models.certification import Certification
 from apps.mission.models.participation import Participation
-from apps.mission.models.likes import MissionLike
+from apps.mission.models.likes import MissionLike, CertificationLike
 from apps.mission.services.models import get_participation_by_mission_and_owner, is_user_liked_mission, check_overlimit_certifications, get_certifications_by_mission_id_and_owner, get_mission_by_id
 from apps.core.utils.response import build_response_body
 from apps.user.services.models import get_user_by_id
@@ -93,7 +93,7 @@ class CertificationSerializer(serializers.ModelSerializer):
     signed_url_num = serializers.IntegerField(required=False)
     class Meta:
         model = Certification
-        fields = ('id', 'name', 'owner', 'mission_id', "img_urls", "content", 'isPublic', 'percieved_difficulty',
+        fields = ('id', 'name', 'owner', 'mission_id', "img_urls", "content", 'is_public', 'percieved_difficulty',
                   'signed_url_num')
 
 
@@ -133,3 +133,8 @@ class CertificationSerializer(serializers.ModelSerializer):
         value['img_urls'] = instance.img_urls
         return build_response_body(data=value)
 
+
+class CertificationLikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CertificationLike
+        fields = ''
