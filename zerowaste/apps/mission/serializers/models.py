@@ -91,6 +91,7 @@ class MissionLikeSerializer(serializers.BaseSerializer):
 
 class CertificationSerializer(serializers.ModelSerializer):
     signed_url_num = serializers.IntegerField(required=False)
+
     class Meta:
         model = Certification
         fields = ('id', 'name', 'owner', 'mission_id', "img_urls", "content", 'is_public', 'percieved_difficulty',
@@ -131,7 +132,7 @@ class CertificationSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         value = super(CertificationSerializer, self).to_representation(instance)
         value['img_urls'] = instance.img_urls
-        return build_response_body(data=value)
+        return value
 
 
 class CertificationLikeSerializer(serializers.ModelSerializer):
