@@ -27,7 +27,6 @@ djangorestframework==3.12.4
 djangorestframework-jwt==1.11.0
 drf-yasg==1.20.0
 gevent==21.1.2
-graphviz==0.16
 greenlet==1.1.0
 gunicorn==20.1.0
 idna==2.10
@@ -48,7 +47,6 @@ py==1.10.0
 pycparser==2.20
 pydot==1.4.2
 Pygments==2.9.0
-pygraphviz==1.7
 PyJWT==1.7.1
 pynguin==0.8.1
 pyparsing==2.4.7
