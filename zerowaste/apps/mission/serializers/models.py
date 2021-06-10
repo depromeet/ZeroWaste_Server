@@ -76,6 +76,9 @@ class ParticipationSerializer(serializers.ModelSerializer):
         if request and hasattr(request, "user"):
             self.initial_data['owner'] = request.user
 
+    def validate(self, data):
+        return self.initial_data
+
 
 class ParticipationNoneFieldSerializer(serializers.BaseSerializer):
     class Meta:

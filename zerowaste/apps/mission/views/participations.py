@@ -59,8 +59,16 @@ class ParticipationViewSet(viewsets.GenericViewSet):
 
     def create(self, request, mission_id):
         participation = models.create_participation(models.get_mission_by_id(mission_id), request.user)
-        return Response(build_response_body(data=to_dict(participation)), status=status.HTTP_200_OK)
+        serializer=ParticipationSerializer(data=participation)
+        serializer.is_valid()
+        data=serializer.data
+        data['mission_id'] = int(mission_id)
+        return Response(build_response_body(data=data), status=status.HTTP_200_OK)
 
     def partial_update(self, request, mission_id, pk):
         participation = models.update_participation_status(pk, models.get_mission_by_id(mission_id), Participation.Status.READY)
-        return Response(build_response_body(data=to_dict(participation)), status=status.HTTP_200_OK)
+        serializer=ParticipationSerializer(data=participation)
+        serializer.is_valid()
+        data=serializer.data
+        data['mission_id'] = int(mission_id)
+        return Response(build_response_body(data=data), status=status.HTTP_200_OK)
