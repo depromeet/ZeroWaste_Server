@@ -15,6 +15,7 @@ from datetime import datetime
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from apps.core import constants
+from django.utils import timezone
 
 
 @method_decorator(name='list',
@@ -162,11 +163,13 @@ class CertificationViewSet(viewsets.GenericViewSet,
             signed_url_num = request.data.get('signed_url_num', 0)
             signed_url_list, public_url_list = separate_url_to_signed_public(signed_url_num, request.user)
             create_certification(serializer.validated_data, request.user, mission_id, public_url_list)
+            created_time = timezone.now()
 
             update_participation_by_certification(request.user, mission_id)
 
             result = serializer.validated_data
             result['signed_url_list'] = signed_url_list
+            result['name'] = created_time
 
             # TODO : 단순히 user id만 나오도록 하기
             result['owner'] = UserSerializer(result['owner']).data['data']

@@ -13,10 +13,10 @@ class MissionLike(models.Model):
         self.mission.update_likes_count()
 
 
-class CertificationLiker(models.Model):
+class CertificationLike(models.Model):
     id = models.BigAutoField(primary_key=True)
-    certification_id = models.ForeignKey("Mission", related_name="certification_liker_mission",
+    certification_id = models.ForeignKey("Mission", related_name="certification_like_mission",
                                          on_delete=models.DO_NOTHING,
                                          db_column="certification_id")
-    owner = models.ForeignKey("user.User", related_name="certification_liker_user", on_delete=models.CASCADE,
+    owner = models.ForeignKey("user.User", related_name="certification_like_user", on_delete=models.CASCADE,
                                 db_column="owner")
