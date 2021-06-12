@@ -114,8 +114,8 @@ class CertificationSerializer(serializers.ModelSerializer):
         mission_id = request.parser_context['kwargs'].get('mission_id', None)
         mission = get_mission_by_id(mission_id)
 
-        if check_overlimit_certifications(user, mission_id)==False:
-            raise ValidationError(f'You already participated this mission. Please find another mission.')
+        if check_overlimit_certifications(user, mission_id)==True:
+            raise ValidationError(f'You already certificated this mission. Please find another mission.')
 
         if not get_participation_by_mission_and_owner(mission, user):
             raise ValidationError(f'Please participate the mission first.')
