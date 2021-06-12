@@ -118,8 +118,6 @@ class CertificationSerializer(serializers.ModelSerializer):
         if not get_participation_by_mission_and_owner(mission, user):
             raise ValidationError(f'Please participate the mission first.')
 
-        #TODO: 이미 존재하는 인증을 수정하려고 할 때(patch), 후기 외에는 수정할 수 없다
-
         return self.initial_data
 
     def to_internal_value(self, data):
@@ -128,14 +126,14 @@ class CertificationSerializer(serializers.ModelSerializer):
             self.initial_data['owner'] = request.user
 
 
-    # TODO: ?? certification에서는 creater로 키를 바꾸기보다, 그냥 owner 정보로 보여져도 될거같은데요? -> ???
+    # TODO: certification에서는 creater로 키를 바꾸기보다, 그냥 owner 정보로 보여져도 될거같은데요? -> ???
     def to_representation(self, instance):
         value = super(CertificationSerializer, self).to_representation(instance)
         value['img_urls'] = instance.img_urls
         return value
 
 
-class CertificationLikeSerializer(serializers.ModelSerializer):
+class CertificationLikeSerializer(serializers.BaseSerializer):
     class Meta:
         model = CertificationLike
         fields = ''

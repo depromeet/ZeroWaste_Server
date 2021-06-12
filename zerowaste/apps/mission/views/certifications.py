@@ -176,11 +176,4 @@ class CertificationViewSet(viewsets.GenericViewSet,
 
             return Response(data=build_response_body(result), status=status.HTTP_200_OK)
 
-    # def partial_update(self, request, mission_id):
-    # return
 
-
-
-
-# TODO: get_participations_by_owner => completed_mission_counts 변경되도록
-# TODO: participation success, failure 등 상태값 변경
