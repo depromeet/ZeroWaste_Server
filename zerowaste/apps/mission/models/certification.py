@@ -1,4 +1,5 @@
 from apps.core.models.soft_delete_model_base import SoftDeleteModelBase
+from apps.mission.models.likes import CertificationLike
 from django.core.validators import MinLengthValidator
 from django.db import models
 from django_mysql.models import ListCharField
@@ -27,3 +28,8 @@ class Certification(SoftDeleteModelBase):
     is_public = models.BooleanField(default=True)
     percieved_difficulty = models.CharField('percieved_difficulty', max_length=10,
                                             choices=Percieved_difficulty.choices, default="")
+    likes_counts = models.IntegerField(default=0)
+
+    def update_certification_likes_counts(self):
+        self.likes_counts = CertificationLike.objects.filter(certification_id=self).count()
+        self.save()

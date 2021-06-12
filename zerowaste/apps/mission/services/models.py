@@ -1,6 +1,6 @@
 from apps.mission.models.mission import Mission
 from apps.mission.models.participation import Participation
-from apps.mission.models.likes import MissionLike
+from apps.mission.models.likes import MissionLike, CertificationLike
 from apps.mission.models.certification import Certification
 
 import pytz
@@ -97,6 +97,10 @@ def create_certification(certification_data, owner, mission_id, public_url_list)
     certification.save()
     return certification
 
+def get_certification_by_id(certification_id):
+    certification = Certification.objects.get(id=certification_id)
+    return certification
+
 def get_certification_by_mission_id(mission_id):
     certification = Certification.objects.filter(mission_id=mission_id)
     return certification
@@ -112,7 +116,6 @@ def get_certifications_by_mission_id_and_owner(mission_id, owner):
     except Certification.DoesNotExist:
         return None
 
-
 def update_participation_by_certification(owner, mission_id):
     try:
         participation = get_participation_by_mission_and_owner(owner=owner, mission=mission_id)
@@ -121,7 +124,6 @@ def update_participation_by_certification(owner, mission_id):
         return participation
     except AttributeError:
         return None
-
 
 def check_overlimit_certifications(owner, mission_id):
     try:
