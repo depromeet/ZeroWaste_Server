@@ -33,4 +33,3 @@ class Certification(SoftDeleteModelBase):
     def update_certification_likes_counts(self):
         self.likes_counts = CertificationLike.objects.filter(certification_id=self).count()
         self.save()
-        print('passed!')
