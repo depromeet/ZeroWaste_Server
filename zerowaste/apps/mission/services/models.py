@@ -15,6 +15,7 @@ _UNIT_DAY_BY_DIFFICULTY = {
     'extra_hard': 14
 }
 
+kst = pytz.timezone('Asia/Seoul')
 
 def get_mission_by_id(mission_id):
     mission = Mission.objects.get(id=mission_id)
@@ -93,7 +94,8 @@ def create_certification(certification_data, owner, mission_id, public_url_list)
                                   owner=owner,
                                   content=certification_data.get('content', ''),
                                   img_urls=public_url_list,
-                                  percieved_difficulty=certification_data['percieved_difficulty'])
+                                  percieved_difficulty=certification_data['percieved_difficulty'],
+                                  name=datetime.now().replace(tzinfo=kst))
     certification.save()
     return certification
 
@@ -125,16 +127,16 @@ def update_participation_by_certification(owner, mission_id):
     except AttributeError:
         return None
 
+# TODO: 같은 user가 하루에 두 번 이상 인증할 때 validation error
 def check_overlimit_certifications(owner, mission_id):
     try:
-        participation = Participation.objects.get(owner=owner, mission=mission_id, status=Participation.Status.SUCCESS)
-        if participation is True:
-            return False
-    except Participation.DoesNotExist:
+        certification = Certification.objects.filter(owner=owner, mission_id=mission_id)
+        if certification is True:
+            return True
+    except Certification.DoesNotExist:
         return None
 
 def check_mission_due_date(now_date, mission_id, owner):
-    kst = pytz.timezone('Asia/Seoul')
     participation = get_participation_by_mission_and_owner(mission_id, owner)
     due_date = participation.end_date
     if now_date.replace(tzinfo=kst) > due_date.replace(tzinfo=kst):
