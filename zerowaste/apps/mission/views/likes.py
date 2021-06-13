@@ -6,8 +6,9 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
 from apps.core.utils.response import build_response_body
+from apps.mission.models.mission import Mission
 from apps.mission.models.likes import MissionLike, CertificationLike
-from apps.mission.serializers.models import MissionLikeSerializer, CertificationLikeSerializer
+from apps.mission.serializers.models import MissionLikeSerializer, CertificationLikeSerializer, MissionSerializer
 from apps.mission.services.models import get_mission_by_id, get_certification_by_id
 from apps.core import constants
 
@@ -17,6 +18,25 @@ from apps.core import constants
     decorator=swagger_auto_schema(
         tags=['missions'],
         opertion_description="Mission 좋아요 등록 \n 생성 DATA에 아무것도 안보내셔도 됩니다.",
+        manual_parameters=[
+            openapi.Parameter(
+                'Authorization', openapi.IN_HEADER,
+                type=openapi.TYPE_STRING,
+                description=constants.USER_JWT_TOKEN
+            ),
+        ],
+        responses={
+            200: '{"state": "object created"}}',
+            401: 'Authentication Failed(40100)',
+            403: 'Permission denied(403)',
+            404: 'Not found(404)'
+        }
+    )
+)
+@method_decorator(name='list',
+    decorator=swagger_auto_schema(
+        tags=['missions'],
+        opertion_description="좋아요한 미션들의 리스트를 반환하는 API입니다.",
         manual_parameters=[
             openapi.Parameter(
                 'Authorization', openapi.IN_HEADER,
@@ -69,6 +89,12 @@ class MissionLikeViewSet(viewsets.GenericViewSet):
             owner=self.request.user
         ).delete()
         return Response(data=build_response_body({'state': 'object deleted'}), status=status.HTTP_200_OK)
+
+    def list(self, request):
+        liked_mission = Mission.objects.filter(like_mission__owner=request.user)
+        serializer=MissionSerializer(data=liked_mission, many=True)
+        serializer.is_valid()
+        return Response(data=build_response_body(serializer.data), status=status.HTTP_200_OK)
 
 
 # Certification

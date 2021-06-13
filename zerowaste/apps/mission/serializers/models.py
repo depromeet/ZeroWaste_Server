@@ -58,6 +58,8 @@ class MissionSerializer(serializers.ModelSerializer):
                 value['participation'] = ParticipationSerializer(participation).data
             value['is_liked'] = is_user_liked_mission(instance, request.user)
             value['user_certified_counts'] = get_certifications_by_mission_id_and_owner(mission_id=instance, owner=request.user).count()
+        if not request:
+            return value
         if request:
             pk = request.parser_context['kwargs'].get('pk', None)
             if not pk: # (hasattr(self, 'action') and self.action == 'list')

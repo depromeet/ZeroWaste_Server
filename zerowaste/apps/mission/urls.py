@@ -11,6 +11,7 @@ router.register('^missions/(?P<mission_id>[0-9]+)/participations', participation
 urlpatterns = [
     path('', include(router.urls)),
     path('missions/<int:mission_id>/like', likes.MissionLikeViewSet.as_view({'post': 'create'})),
+    path('missions/like', likes.MissionLikeViewSet.as_view({'get': 'list'})),
     path('missions/<int:mission_id>/dislike', likes.MissionLikeViewSet.as_view({'delete': 'destroy'})),
     path('batch/participations', missions.update_participation_status),
     path('certifications/<int:certification_id>/like', likes.CertificationLikeViewSet.as_view({'post': 'create'})),
