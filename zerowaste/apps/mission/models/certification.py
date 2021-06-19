@@ -28,8 +28,10 @@ class Certification(SoftDeleteModelBase):
     is_public = models.BooleanField(default=True)
     percieved_difficulty = models.CharField('percieved_difficulty', max_length=10,
                                             choices=Percieved_difficulty.choices, default="")
-    likes_counts = models.IntegerField(default=0)
+    likes_count = models.IntegerField(default=0)
+    # TODO: 로그인한 유저가 이 미션을 수행했는지 안 했는지 certification에서 아이디 확인
+    owner_like = models.BooleanField(default=False)
 
-    def update_certification_likes_counts(self):
-        self.likes_counts = CertificationLike.objects.filter(certification_id=self).count()
+    def update_certification_likes_count(self):
+        self.likes_count = CertificationLike.objects.filter(certification_id=self).count()
         self.save()

@@ -95,12 +95,18 @@ def create_certification(certification_data, owner, mission_id, public_url_list)
                                   content=certification_data.get('content', ''),
                                   img_urls=public_url_list,
                                   percieved_difficulty=certification_data['percieved_difficulty'],
-                                  name=datetime.now().replace(tzinfo=kst))
+                                  name=datetime.now().replace(tzinfo=kst)
+                                  )
     certification.save()
     return certification
 
+
 def get_certification_by_id(certification_id):
     certification = Certification.objects.get(id=certification_id)
+    return certification
+
+def get_certification_created_by_owner(owner):
+    certification = Certification.objects.filter(owner=owner)
     return certification
 
 def get_certification_by_mission_id(mission_id):
@@ -143,11 +149,13 @@ def check_mission_due_date(now_date, mission_id, owner):
         participation.status = Participation.Status.FAILURE
         participation.save()
 
+def is_user_liked_certification(certification_id, owner):
+    result = True if CertificationLike.objects.filter(certification_id=certification_id, owner=owner) else False
+    return result
 
-# TODO : 랭킹 기준으로 TOP 3
-# def get_top3_ranker_user(owner, mission_id):
-#     return
-
+def get_user_liked_certification_by_owner(owner):
+    liked_certification = CertificationLike.objects.filter(owner=owner)
+    return liked_certification
 
 def get_liked_missions_counts_by_missions(mission):
     result = MissionLike.objects.filter(mission=mission).count()

@@ -117,8 +117,6 @@ class CertificationLikeViewSet(viewsets.GenericViewSet):
     serializer_class = CertificationLikeSerializer
 
     def create(self, request, certification_id):
-        print(self)
-        print(request)
         CertificationLike.objects.get_or_create(
             certification_id = get_certification_by_id(certification_id),
             owner = self.request.user
