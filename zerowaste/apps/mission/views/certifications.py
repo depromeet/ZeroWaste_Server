@@ -8,7 +8,8 @@ from apps.mission.serializers.models import CertificationSerializer
 from apps.user.serializers.models import UserSerializer
 from apps.mission.services.missions import separate_url_to_signed_public
 from apps.mission.services.models import create_certification, get_mission_by_id, update_participation_by_certification,\
-    get_certification_by_mission_id, get_certification_by_mission_and_id, check_mission_due_date, get_certification_by_id, get_user_liked_certification_by_owner
+    get_certification_by_mission_id, get_certification_by_mission_and_id, check_mission_due_date, get_certification_by_id,\
+    get_user_liked_certification_by_owner, get_certification_by_owner
 from apps.mission.models.certification import Certification
 from apps.core.utils.response import build_response_body
 from datetime import datetime
@@ -243,3 +244,40 @@ class LikedCertificationByUserViewset(viewsets.GenericViewSet,
             serializer = self.get_serializer(certification, many=True)
             return Response(build_response_body(data=serializer.data), status=status.HTTP_200_OK)
 
+
+@method_decorator(name='list',
+    decorator=swagger_auto_schema(
+        tags=['certifications'],
+        operation_description="사용자가 생성한 인증 리스트를 조회합니다.",
+        manual_parameters=[
+            openapi.Parameter(
+                'Authorization', openapi.IN_HEADER,
+                type=openapi.TYPE_STRING,
+                description=constants.USER_JWT_TOKEN
+            ),
+        ],
+        responses={
+            200: CertificationSerializer,
+            401: 'Authentication Failed(40100)',
+            403: 'Permission denied(403)',
+            404: 'Not found(404)'
+        }
+    )
+)
+
+class CreatedCertificationByUserViewset(viewsets.GenericViewSet,
+                                        mixins.ListModelMixin):
+    authentication_classes = [JSONWebTokenAuthentication]
+    permission_classes = [custom_permission.IsOwnerOrReadOnly]
+    queryset = Certification.objects
+    serializer_class = CertificationSerializer
+
+    def get_queryset(self):
+        return super().get_queryset().filter(is_public=True)
+
+    def list(self, request):
+        certification = get_certification_by_owner(owner=request.user)
+
+        if certification is not None:
+            serializer = self.get_serializer(certification, many=True)
+            return Response(build_response_body(data=serializer.data), status=status.HTTP_200_OK)

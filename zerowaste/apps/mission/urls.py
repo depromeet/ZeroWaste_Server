@@ -7,8 +7,8 @@ router.register('missions', missions.MissionViewSet)
 router.register('^missions/(?P<mission_id>[0-9]+)/certifications', certifications.CertificationViewSet)
 router.register('certifications', certifications.GetCertificationInfoViewset)
 router.register('certifications/liked',certifications.LikedCertificationByUserViewset)
+router.register('certifications/created', certifications.CreatedCertificationByUserViewset)
 router.register('^missions/(?P<mission_id>[0-9]+)/participations', participations.ParticipationViewSet)
-# TODO: Ranking view => mission_id만 있으면 될 듯
 
 urlpatterns = [
     path('', include(router.urls)),

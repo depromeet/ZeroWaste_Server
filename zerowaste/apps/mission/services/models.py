@@ -105,7 +105,7 @@ def get_certification_by_id(certification_id):
     certification = Certification.objects.get(id=certification_id)
     return certification
 
-def get_certification_created_by_owner(owner):
+def get_certification_by_owner(owner):
     certification = Certification.objects.filter(owner=owner)
     return certification
 
