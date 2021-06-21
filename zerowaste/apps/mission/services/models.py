@@ -154,7 +154,7 @@ def is_user_liked_certification(certification_id, owner):
     return result
 
 def get_user_liked_certification_by_owner(owner):
-    liked_certification = CertificationLike.objects.filter(owner=owner)
+    liked_certification = Certification.objects.filter(certification_like_mission__in=CertificationLike.objects.filter(owner=owner))
     return liked_certification
 
 def get_liked_missions_counts_by_missions(mission):

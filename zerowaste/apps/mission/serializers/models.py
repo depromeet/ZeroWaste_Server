@@ -95,7 +95,7 @@ class CertificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Certification
         fields = ('id', 'name', 'owner', 'mission_id', "img_urls", "content", 'is_public', 'percieved_difficulty',
-                  'signed_url_num', 'likes_count', 'owner_like')
+                  'signed_url_num', 'likes_count')
 
 
     def validate(self, data):
