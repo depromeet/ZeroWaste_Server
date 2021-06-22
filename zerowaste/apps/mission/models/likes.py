@@ -23,6 +23,5 @@ class CertificationLike(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        print(self)
-        self.certification_id.update_certification_likes_counts()
+        self.certification_id.update_certification_likes_count()
 
